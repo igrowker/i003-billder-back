@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata;
 
-namespace Billder.Infrastructure.Data
+namespace Billder.Data
 {
     public partial class AppDbContext : DbContext
     {
