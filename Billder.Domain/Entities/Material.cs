@@ -1,14 +1,18 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Billder.Domain.Entities
 {
-    public class Material
+    public partial class Material
     {
+        public Material()
+        {
+            PresupuestoMaterials = new HashSet<PresupuestoMaterial>();
+        }
+
         public int Id { get; set; }
-        public string? Nombre { get; set; }
+        public string? Descripcion { get; set; }
+
+        public virtual ICollection<PresupuestoMaterial> PresupuestoMaterials { get; set; }
     }
 }

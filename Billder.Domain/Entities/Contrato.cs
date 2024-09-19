@@ -1,15 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
 
-namespace Billder.Data
+namespace Billder.Domain.Entities
 {
-    public partial class Pago
+    public partial class Contrato
     {
         public int Id { get; set; }
         public int? TrabajoId { get; set; }
-        public decimal? Monto { get; set; }
-        public string Metodo { get; set; } = null!;
-        public DateTime? FechaPago { get; set; }
+        public string? Condiciones { get; set; }
 
         public virtual Trabajo? Trabajo { get; set; }
     }
