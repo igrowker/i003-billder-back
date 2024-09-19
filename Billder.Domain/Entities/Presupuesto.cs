@@ -1,15 +1,22 @@
-﻿using Billder.Domain.Enums;
-using System;
+﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Billder.Domain.Entities
 {
-    public class Presupuesto
+    public partial class Presupuesto
     {
+        public Presupuesto()
+        {
+            PresupuestoEmpleados = new HashSet<PresupuestoEmpleado>();
+            PresupuestoMaterials = new HashSet<PresupuestoMaterial>();
+            Trabajos = new HashSet<Trabajo>();
+        }
+
         public int Id { get; set; }
-        public EstadoPresupuesto Estado   { get; set; }
+        public string EstadoPresupuesto { get; set; } = null!;
+
+        public virtual ICollection<PresupuestoEmpleado> PresupuestoEmpleados { get; set; }
+        public virtual ICollection<PresupuestoMaterial> PresupuestoMaterials { get; set; }
+        public virtual ICollection<Trabajo> Trabajos { get; set; }
     }
 }

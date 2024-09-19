@@ -3,19 +3,17 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.10.35004.147
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Billder.Application", "Billder.Application\Billder.Application.csproj", "{72025372-C3A9-4FC6-A093-AEDC6DAEC209}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Billder.Application", "Billder.Application\Billder.Application.csproj", "{72025372-C3A9-4FC6-A093-AEDC6DAEC209}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Billder.API", "Billder.API\Billder.API.csproj", "{510F0392-A24D-4959-B529-68B22EC54C4D}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Billder.API", "Billder.API\Billder.API.csproj", "{510F0392-A24D-4959-B529-68B22EC54C4D}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Billder.Domain", "Billder.Domain\Billder.Domain.csproj", "{7ED42050-3EAE-4A48-A400-ABC25A9DE7C2}"
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Billder.Infrastructure", "Billder.Infrastructure\Billder.Infrastructure.csproj", "{012416DB-01E6-428C-AA81-BD324B76DD67}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Billder.Infrastructure", "Billder.Infrastructure\Billder.Infrastructure.csproj", "{012416DB-01E6-428C-AA81-BD324B76DD67}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "src", "src", "{6739A24E-86C9-464A-9EB6-54D03D468728}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "test", "test", "{72958EE8-7E0E-4939-8619-6F4FFFA049D8}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Billder.Test", "Billder.Test\Billder.Test.csproj", "{7CDBA274-544C-4927-A242-300FE0B847F3}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Billder.Test", "Billder.Test\Billder.Test.csproj", "{7CDBA274-544C-4927-A242-300FE0B847F3}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -31,10 +29,6 @@ Global
 		{510F0392-A24D-4959-B529-68B22EC54C4D}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{510F0392-A24D-4959-B529-68B22EC54C4D}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{510F0392-A24D-4959-B529-68B22EC54C4D}.Release|Any CPU.Build.0 = Release|Any CPU
-		{7ED42050-3EAE-4A48-A400-ABC25A9DE7C2}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{7ED42050-3EAE-4A48-A400-ABC25A9DE7C2}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{7ED42050-3EAE-4A48-A400-ABC25A9DE7C2}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{7ED42050-3EAE-4A48-A400-ABC25A9DE7C2}.Release|Any CPU.Build.0 = Release|Any CPU
 		{012416DB-01E6-428C-AA81-BD324B76DD67}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{012416DB-01E6-428C-AA81-BD324B76DD67}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{012416DB-01E6-428C-AA81-BD324B76DD67}.Release|Any CPU.ActiveCfg = Release|Any CPU
@@ -50,7 +44,6 @@ Global
 	GlobalSection(NestedProjects) = preSolution
 		{72025372-C3A9-4FC6-A093-AEDC6DAEC209} = {6739A24E-86C9-464A-9EB6-54D03D468728}
 		{510F0392-A24D-4959-B529-68B22EC54C4D} = {6739A24E-86C9-464A-9EB6-54D03D468728}
-		{7ED42050-3EAE-4A48-A400-ABC25A9DE7C2} = {6739A24E-86C9-464A-9EB6-54D03D468728}
 		{012416DB-01E6-428C-AA81-BD324B76DD67} = {6739A24E-86C9-464A-9EB6-54D03D468728}
 		{7CDBA274-544C-4927-A242-300FE0B847F3} = {72958EE8-7E0E-4939-8619-6F4FFFA049D8}
 	EndGlobalSection

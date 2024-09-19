@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 
-namespace Billder.Domain.Entities
+namespace Billder.Infrastructure.Entities
 {
     public partial class Pago
     {

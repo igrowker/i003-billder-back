@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using Billder.Infrastructure.Entities;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata;
 

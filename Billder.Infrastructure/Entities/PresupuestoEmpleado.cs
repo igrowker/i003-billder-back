@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 
-namespace Billder.Data
+namespace Billder.Infrastructure.Entities
 {
     public partial class PresupuestoEmpleado
     {
