@@ -1,17 +1,13 @@
 ﻿using Billder.Application.Interfaces;
+using Billder.Application.Repository.Interfaces;
 using Billder.Infrastructure.Data;
 using Billder.Infrastructure.Entities;
-using Microsoft.Data.SqlClient;
 using Microsoft.EntityFrameworkCore;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+
 
 namespace Billder.Application.Repository
 {
-    public class TrabajoRepository : ITrabajoInterface
+    public class TrabajoRepository : ITrabajoInterfaceRepository
     {
         private readonly AppDbContext _context;
 
@@ -19,12 +15,12 @@ namespace Billder.Application.Repository
         {
             _context = context;
         }
-        public async Task<Trabajo>CrearTrabajo(Trabajo trabajo)
+        public async Task<Trabajo> CrearTrabajoRepository(Trabajo trabajo)
         {
             try
             {
                 await _context.Trabajos.AddAsync(trabajo);
-                _context.SaveChangesAsync();
+                _context?.SaveChangesAsync();
                 return trabajo;
             }
             catch (DbUpdateException ex)
@@ -33,7 +29,7 @@ namespace Billder.Application.Repository
             }
 
         }
-        public async Task<Trabajo>GetTrabajoByID(int id)
+        public async Task<Trabajo> GetTrabajoByIDRepository(int id)
         {
             try
             {
@@ -44,7 +40,7 @@ namespace Billder.Application.Repository
                 throw new Exception("Ocurrio un error al obtener el trabajo por ID ", ex);
             }
         }
-        public async Task<Trabajo> UpdateTrabajo( Trabajo trabajoRecibido)
+        public async Task<Trabajo> UpdateTrabajoRepository( Trabajo trabajoRecibido)
         {
             try
             {

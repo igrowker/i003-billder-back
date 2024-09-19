@@ -1,4 +1,7 @@
 ﻿
+using Billder.Application.Interfaces;
+using Billder.Application.Repository;
+using Billder.Infrastructure.Entities;
 
 namespace Billder.Application.Services
 {   //1
@@ -14,8 +17,23 @@ namespace Billder.Application.Services
     //4
     //Desarrollar el endpoint GET /api/trabajos que permita obtener el historial completo de trabajos realizados por el usuario.
     //Asegurarse de que los datos sean precisos y que los trabajos se puedan filtrar por fecha y estado.
-    public class TrabajoService
+    public class TrabajoService : ITrabajoInterface
     {
+        private readonly TrabajoRepository _trabajoRepository;
+        public async Task<Trabajo> CrearTrabajo(Trabajo trabajo)
+        {
+            return await _trabajoRepository.CrearTrabajoRepository(trabajo);
 
+        }
+
+        public async Task<Trabajo> GetTrabajoByID(int id)
+        {
+            return await _trabajoRepository.GetTrabajoByIDRepository(id);
+        }
+
+        public async Task<Trabajo> UpdateTrabajo(Trabajo trabajo)
+        {
+            return await _trabajoRepository.UpdateTrabajoRepository(trabajo);
+        }
     }
 }
