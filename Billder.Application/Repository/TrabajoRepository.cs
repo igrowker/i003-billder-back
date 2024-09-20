@@ -20,7 +20,7 @@ namespace Billder.Application.Repository
             try
             {
                 await _context.Trabajos.AddAsync(trabajo);
-                _context?.SaveChangesAsync();
+                await _context?.SaveChangesAsync();
                 return trabajo;
             }
             catch (DbUpdateException ex)
@@ -34,7 +34,6 @@ namespace Billder.Application.Repository
             try
             {
                 return await _context.Trabajos.FindAsync(id);
-
             }
             catch (Exception ex) {
                 throw new Exception("Ocurrio un error al obtener el trabajo por ID ", ex);
@@ -46,14 +45,14 @@ namespace Billder.Application.Repository
             {
                 var objetoTrabajo = await _context.Trabajos.FindAsync(trabajoRecibido.Id);
 
-                if (objetoTrabajo != null)
+                if (objetoTrabajo == null)
                 {
-                    objetoTrabajo.Nombre = trabajoRecibido.Nombre;
-                    objetoTrabajo.Descripcion = trabajoRecibido.Descripcion;
-                    objetoTrabajo.Fecha = trabajoRecibido.Fecha;
-                    objetoTrabajo.EstadoTrabajo = trabajoRecibido.EstadoTrabajo;
+                    return null;
                 }
-
+                objetoTrabajo.Nombre = trabajoRecibido.Nombre;
+                objetoTrabajo.Descripcion = trabajoRecibido.Descripcion;
+                objetoTrabajo.Fecha = trabajoRecibido.Fecha;
+                objetoTrabajo.EstadoTrabajo = trabajoRecibido.EstadoTrabajo;
                 await _context.SaveChangesAsync();
                 return objetoTrabajo;
             }
@@ -75,20 +74,36 @@ namespace Billder.Application.Repository
         }
 
         //recibo por parametro una lista de ID's, y devuelvo una lista de trabajos
-        public async Task<List<Trabajo>> GetHistorialDeTrabajosRepository(int usuarioID)
+        public async Task<List<Trabajo>> GetHistorialDeTrabajosRepository(int clienteID, int numeroPagina)
         {
+            try
+            {
+                var clienteValido = await _context.Usuarios.FindAsync(clienteID, numeroPagina);
+                if (clienteID != null)
+                {
+                    int trabajosPorPagina = 5;
+                    int offset = (numeroPagina - 1) * trabajosPorPagina;
 
-            var trabajosDeUsuario = _context.Usuarios.FindAsync(usuarioID);
-            //recibo un usuarioID
-            //busco en DB los trabajos que tengan ese usuarioID
-            //hago un ordenamiento, traigo los mas recientes primero
-            //y establezco un limite de 5, tipo paginacion
+                    var trabajosDeCliente = await _context.Trabajos
+                        .FromSqlRaw(
+                            "SELECT t.Id AS TrabajoID, t.Nombre, t.ClienteID, t.PresupuestoId, t.Descripcion, " +
+                            "t.Fecha, t.EstadoTrabajo, c.Nombre AS ClienteNombre " +
+                            "FROM dbo.Trabajo AS t " +
+                            "INNER JOIN dbo.Cliente AS c ON t.ClienteID = c.Id " +
+                            "WHERE t.ClienteID = {0} " +
+                            "ORDER BY t.Fecha ASC " +
+                            "OFFSET {1} ROWS FETCH NEXT {2} ROWS ONLY",
+                            clienteID, offset, trabajosPorPagina)
+                        .ToListAsync();
+                    return trabajosDeCliente;
+                }
+            }
+            catch (DbUpdateException ex)
+            {
+                throw new Exception("Ocurrio un error al obtener el historial de trabajos", ex);
+            }
 
-
-
-            //return await _context.Trabajos
-            //    .Where(t=>trabajoIDs.Contains(t.Id))
-            //    .ToListAsync();
+            return null;
         }
     }
 }

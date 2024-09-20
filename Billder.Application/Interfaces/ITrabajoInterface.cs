@@ -8,6 +8,6 @@ namespace Billder.Application.Interfaces
         Task<Trabajo> CrearTrabajo(Trabajo trabajo);
         Task<Trabajo> UpdateTrabajo(Trabajo trabajo);
         Task<int> DeleteTrabajo(int id);
-        Task<List<Trabajo>> GetHistorialDeTrabajos(List<int> trabajoIDs);
+        Task<List<Trabajo>> GetHistorialDeTrabajos(int clienteID, int numeroPagina);
     }
 }
