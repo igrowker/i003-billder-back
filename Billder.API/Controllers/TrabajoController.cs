@@ -33,7 +33,7 @@ namespace Billder.API.Controllers
         {
             if(trabajo == null)
             {
-                return BadRequest("Trabajo no puede ser nulo");
+                return BadRequest("Trabajo no debe estar vacío");
             }
             try
             {
@@ -46,5 +46,51 @@ namespace Billder.API.Controllers
                 return StatusCode(500, ex.Message);
             }
         }
+        [HttpPut]
+        public async Task<IActionResult> UpdateTrabajo(Trabajo trabajo)
+        {
+            if(trabajo == null)
+            {
+                return BadRequest("El trabajo no puede ser nulo");
+            }
+            try
+            {
+                var trabajoEncontrado = await _service.UpdateTrabajo(trabajo);
+                return Ok(trabajoEncontrado);
+            }
+            catch(Exception ex)
+            {
+                _logger.LogError(ex, "Error al actualizar el trabajo");
+                return StatusCode(500, ex.Message);
+            }
+        }
+        [HttpDelete]
+        public async Task<IActionResult> DeleteTrabajo(int id)
+        {
+            var trabajoEncontrado = await _service.GetTrabajoByID(id);
+            if(trabajoEncontrado == null)
+            {
+                return NotFound("No se encontro un trabajo con ese ID");
+            }
+            try
+            {
+                var trabajoBorrado = await _service.DeleteTrabajo(id);
+                if(trabajoBorrado == 0)
+                {
+                    return NotFound("No se encontro un trabajo para eliminar");
+                }
+                return NoContent();
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error al borrar el trabajo");
+                return StatusCode(500, ex.Message);
+            }
+        }
+        //[HttpGet]
+        //public async Task<IActionResult> GetHistorialDeTrabajos(int clienteID, int numeroPagina)
+        //{
+
+        //}
     }
 }

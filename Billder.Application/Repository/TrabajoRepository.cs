@@ -34,7 +34,6 @@ namespace Billder.Application.Repository
             try
             {
                 return await _context.Trabajos.FindAsync(id);
-
             }
             catch (Exception ex) {
                 throw new Exception("Ocurrio un error al obtener el trabajo por ID ", ex);
@@ -46,14 +45,14 @@ namespace Billder.Application.Repository
             {
                 var objetoTrabajo = await _context.Trabajos.FindAsync(trabajoRecibido.Id);
 
-                if (objetoTrabajo != null)
+                if (objetoTrabajo == null)
                 {
-                    objetoTrabajo.Nombre = trabajoRecibido.Nombre;
-                    objetoTrabajo.Descripcion = trabajoRecibido.Descripcion;
-                    objetoTrabajo.Fecha = trabajoRecibido.Fecha;
-                    objetoTrabajo.EstadoTrabajo = trabajoRecibido.EstadoTrabajo;
+                    return null;
                 }
-
+                objetoTrabajo.Nombre = trabajoRecibido.Nombre;
+                objetoTrabajo.Descripcion = trabajoRecibido.Descripcion;
+                objetoTrabajo.Fecha = trabajoRecibido.Fecha;
+                objetoTrabajo.EstadoTrabajo = trabajoRecibido.EstadoTrabajo;
                 await _context.SaveChangesAsync();
                 return objetoTrabajo;
             }
