@@ -35,5 +35,13 @@ namespace Billder.Application.Services
         {
             return await _trabajoRepository.UpdateTrabajoRepository(trabajo);
         }
+        public async Task<int> DeleteTrabajo(int id)
+        {
+            return await _trabajoRepository.DeleteTrabajoRepository(id);
+        }
+        public async Task<List<Trabajo>> GetHistorialDeTrabajos(List<int> trabajoIDs)
+        {
+            return await _trabajoRepository.GetHistorialDeTrabajosRepository(trabajoIDs);
+        }
     }
 }
