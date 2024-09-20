@@ -63,5 +63,23 @@ namespace Billder.Application.Repository
             }
 
         }
+        public async Task<int> DeleteTrabajoRepository(int id)
+        {
+            var trabajoEncontrado = await _context.Trabajos.FindAsync(id);
+            if(trabajoEncontrado != null)
+            {
+                return 0;
+            }
+            _context.Trabajos.Remove(trabajoEncontrado);
+            return await _context.SaveChangesAsync(); //devuelve el N° de filas afectadas
+        }
+
+        //recibo por parametro una lista de ID's, y devuelvo una lista de trabajos
+        public async Task<List<Trabajo>> GetHistorialDeTrabajosRepository(List<int> trabajoIDs)
+        {
+            return await _context.Trabajos
+                .Where(t=>trabajoIDs.Contains(t.Id))
+                .ToListAsync();
+        }
     }
 }
