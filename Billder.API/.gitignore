@@ -1,0 +1,57 @@
+# Ignore Visual Studio temporary files, build results, and
+# user-specific files
+.vscode/
+.vs/
+.idea/
+*.user
+*.suo
+*.sln.docstates
+
+# NuGet packages
+*.nupkg
+**/packages/*
+
+# Visual Studio Code settings
+.vscode/
+
+# Build results
+[Dd]ebug/
+[Rr]elease/
+x64/
+x86/
+[Oo]bj/
+[Bb]in/
+[Oo]ut/
+
+# LocalDB, SQL, and EF files
+*.mdf
+*.ldf
+*.sql
+
+# Entity Framework migration files
+Migrations/
+
+# Dotnet publish directory
+publish/
+
+# Sensitive config files
+appsettings.Development.json
+appsettings.*.json # Catch any environment-specific appsettings files
+
+# IDE-specific settings
+*.csproj.user
+*.csproj.DotSettings
+
+# Logs
+*.log
+logs/
+
+# Temporary files
+*.tmp
+*.temp
+~$*
+*.cache
+
+# Appsettings files
+appsettings.json
+appsettings*.json

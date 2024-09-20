@@ -3,7 +3,7 @@ using System.Collections.Generic;
 
 namespace Billder.Infrastructure.Entities
 {
-    public partial class User
+    public partial class Usuario
     {
         public int Id { get; set; }
         public string? FullName { get; set; }
