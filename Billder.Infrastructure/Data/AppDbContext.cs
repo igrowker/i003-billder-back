@@ -26,7 +26,7 @@ namespace Billder.Infrastructure.Data
         public virtual DbSet<PresupuestoEmpleado> PresupuestoEmpleados { get; set; } = null!;
         public virtual DbSet<PresupuestoMaterial> PresupuestoMaterials { get; set; } = null!;
         public virtual DbSet<Trabajo> Trabajos { get; set; } = null!;
-        public virtual DbSet<User> Users { get; set; } = null!;
+        public virtual DbSet<Usuario> Usuarios { get; set; } = null!;
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
@@ -217,9 +217,9 @@ namespace Billder.Infrastructure.Data
                     .HasConstraintName("FK__Trabajo__Presupu__4F7CD00D");
             });
 
-            modelBuilder.Entity<User>(entity =>
+            modelBuilder.Entity<Usuario>(entity =>
             {
-                entity.ToTable("User");
+                entity.ToTable("Usuario");
 
                 entity.Property(e => e.Id).ValueGeneratedNever();
 

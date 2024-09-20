@@ -7,7 +7,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Billder.Application.Repository
 {
-    public class TrabajoRepository : ITrabajoInterfaceRepository
+    public class TrabajoRepository : ITrabajoRepository
     {
         private readonly AppDbContext _context;
 
@@ -75,11 +75,20 @@ namespace Billder.Application.Repository
         }
 
         //recibo por parametro una lista de ID's, y devuelvo una lista de trabajos
-        public async Task<List<Trabajo>> GetHistorialDeTrabajosRepository(List<int> trabajoIDs)
+        public async Task<List<Trabajo>> GetHistorialDeTrabajosRepository(int usuarioID)
         {
-            return await _context.Trabajos
-                .Where(t=>trabajoIDs.Contains(t.Id))
-                .ToListAsync();
+
+            var trabajosDeUsuario = _context.Usuarios.FindAsync(usuarioID);
+            //recibo un usuarioID
+            //busco en DB los trabajos que tengan ese usuarioID
+            //hago un ordenamiento, traigo los mas recientes primero
+            //y establezco un limite de 5, tipo paginacion
+
+
+
+            //return await _context.Trabajos
+            //    .Where(t=>trabajoIDs.Contains(t.Id))
+            //    .ToListAsync();
         }
     }
 }
