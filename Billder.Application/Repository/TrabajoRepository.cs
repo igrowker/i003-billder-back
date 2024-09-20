@@ -78,17 +78,16 @@ namespace Billder.Application.Repository
         public async Task<List<Trabajo>> GetHistorialDeTrabajosRepository(int usuarioID)
         {
 
-            var trabajosDeUsuario = _context.Usuarios.FindAsync(usuarioID);
+            var usuarioValido = await _context.Usuarios.FindAsync(usuarioID);
+            if (usuarioID != null)
+            {
+                var trabajosDeUsuario = await _context.Database.ExecuteSqlRawAsync("");
+            }
+            return null;
             //recibo un usuarioID
             //busco en DB los trabajos que tengan ese usuarioID
             //hago un ordenamiento, traigo los mas recientes primero
             //y establezco un limite de 5, tipo paginacion
-
-
-
-            //return await _context.Trabajos
-            //    .Where(t=>trabajoIDs.Contains(t.Id))
-            //    .ToListAsync();
         }
     }
 }

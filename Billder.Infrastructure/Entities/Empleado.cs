@@ -12,7 +12,8 @@ namespace Billder.Infrastructure.Entities
 
         public int Id { get; set; }
         public string? Fullname { get; set; }
-        public string? DNI { get; set; }
+        public string Identificacion { get; set; } = null!;
+        public string? NroIdentificacion { get; set; }
         public string? Puesto { get; set; }
 
         public virtual ICollection<PresupuestoEmpleado> PresupuestoEmpleados { get; set; }
