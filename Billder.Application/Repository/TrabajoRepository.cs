@@ -20,7 +20,7 @@ namespace Billder.Application.Repository
             try
             {
                 await _context.Trabajos.AddAsync(trabajo);
-                _context?.SaveChangesAsync();
+                await _context?.SaveChangesAsync();
                 return trabajo;
             }
             catch (DbUpdateException ex)
@@ -75,19 +75,36 @@ namespace Billder.Application.Repository
         }
 
         //recibo por parametro una lista de ID's, y devuelvo una lista de trabajos
-        public async Task<List<Trabajo>> GetHistorialDeTrabajosRepository(int usuarioID)
+        public async Task<List<Trabajo>> GetHistorialDeTrabajosRepository(int clienteID, int numeroPagina)
         {
-
-            var usuarioValido = await _context.Usuarios.FindAsync(usuarioID);
-            if (usuarioID != null)
+            try
             {
-                var trabajosDeUsuario = await _context.Database.ExecuteSqlRawAsync("");
+                var clienteValido = await _context.Usuarios.FindAsync(clienteID, numeroPagina);
+                if (clienteID != null)
+                {
+                    int trabajosPorPagina = 5;
+                    int offset = (numeroPagina - 1) * trabajosPorPagina;
+
+                    var trabajosDeCliente = await _context.Trabajos
+                        .FromSqlRaw(
+                            "SELECT t.Id AS TrabajoID, t.Nombre, t.ClienteID, t.PresupuestoId, t.Descripcion, " +
+                            "t.Fecha, t.EstadoTrabajo, c.Nombre AS ClienteNombre " +
+                            "FROM dbo.Trabajo AS t " +
+                            "INNER JOIN dbo.Cliente AS c ON t.ClienteID = c.Id " +
+                            "WHERE t.ClienteID = {0} " +
+                            "ORDER BY t.Fecha ASC " +
+                            "OFFSET {1} ROWS FETCH NEXT {2} ROWS ONLY",
+                            clienteID, offset, trabajosPorPagina)
+                        .ToListAsync();
+                    return trabajosDeCliente;
+                }
             }
+            catch (DbUpdateException ex)
+            {
+                throw new Exception("Ocurrio un error al obtener el historial de trabajos", ex);
+            }
+
             return null;
-            //recibo un usuarioID
-            //busco en DB los trabajos que tengan ese usuarioID
-            //hago un ordenamiento, traigo los mas recientes primero
-            //y establezco un limite de 5, tipo paginacion
         }
     }
 }

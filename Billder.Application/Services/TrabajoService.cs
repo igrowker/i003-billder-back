@@ -1,6 +1,7 @@
 ﻿
 using Billder.Application.Interfaces;
 using Billder.Application.Repository;
+using Billder.Application.Repository.Interfaces;
 using Billder.Infrastructure.Entities;
 
 namespace Billder.Application.Services
@@ -19,7 +20,13 @@ namespace Billder.Application.Services
     //Asegurarse de que los datos sean precisos y que los trabajos se puedan filtrar por fecha y estado.
     public class TrabajoService : ITrabajoInterface
     {
-        private readonly TrabajoRepository _trabajoRepository;
+        private readonly ITrabajoRepository _trabajoRepository;
+
+        public TrabajoService(ITrabajoRepository trabajoRepository)
+        {
+            _trabajoRepository = trabajoRepository;
+        }
+
         public async Task<Trabajo> CrearTrabajo(Trabajo trabajo)
         {
             return await _trabajoRepository.CrearTrabajoRepository(trabajo);
@@ -39,9 +46,9 @@ namespace Billder.Application.Services
         {
             return await _trabajoRepository.DeleteTrabajoRepository(id);
         }
-        public async Task<List<Trabajo>> GetHistorialDeTrabajos(int usuarioID)
+        public async Task<List<Trabajo>> GetHistorialDeTrabajos(int clienteID, int numeroPagina)
         {
-            return await _trabajoRepository.GetHistorialDeTrabajosRepository(usuarioID);
+            return await _trabajoRepository.GetHistorialDeTrabajosRepository(clienteID,numeroPagina);
         }
     }
 }
