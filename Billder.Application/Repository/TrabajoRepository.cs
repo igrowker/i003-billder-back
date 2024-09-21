@@ -1,5 +1,4 @@
-﻿using Billder.Application.Interfaces;
-using Billder.Application.Repository.Interfaces;
+﻿using Billder.Application.Repository.Interfaces;
 using Billder.Infrastructure.Data;
 using Billder.Infrastructure.Entities;
 using Microsoft.EntityFrameworkCore;
@@ -65,7 +64,7 @@ namespace Billder.Application.Repository
         public async Task<int> DeleteTrabajoRepository(int id)
         {
             var trabajoEncontrado = await _context.Trabajos.FindAsync(id);
-            if(trabajoEncontrado != null)
+            if(trabajoEncontrado == null)
             {
                 return 0;
             }
@@ -73,37 +72,35 @@ namespace Billder.Application.Repository
             return await _context.SaveChangesAsync(); //devuelve el N° de filas afectadas
         }
 
-        //recibo por parametro una lista de ID's, y devuelvo una lista de trabajos
         public async Task<List<Trabajo>> GetHistorialDeTrabajosRepository(int clienteID, int numeroPagina)
         {
             try
             {
-                var clienteValido = await _context.Usuarios.FindAsync(clienteID, numeroPagina);
-                if (clienteID != null)
+                var clienteValido = await _context.Clientes.FindAsync(clienteID);
+                if (clienteValido == null)
                 {
-                    int trabajosPorPagina = 5;
-                    int offset = (numeroPagina - 1) * trabajosPorPagina;
-
-                    var trabajosDeCliente = await _context.Trabajos
-                        .FromSqlRaw(
-                            "SELECT t.Id AS TrabajoID, t.Nombre, t.ClienteID, t.PresupuestoId, t.Descripcion, " +
-                            "t.Fecha, t.EstadoTrabajo, c.Nombre AS ClienteNombre " +
-                            "FROM dbo.Trabajo AS t " +
-                            "INNER JOIN dbo.Cliente AS c ON t.ClienteID = c.Id " +
-                            "WHERE t.ClienteID = {0} " +
-                            "ORDER BY t.Fecha ASC " +
-                            "OFFSET {1} ROWS FETCH NEXT {2} ROWS ONLY",
-                            clienteID, offset, trabajosPorPagina)
-                        .ToListAsync();
-                    return trabajosDeCliente;
+                    throw new Exception("Cliente no encontrado");
                 }
+                int trabajosPorPagina = 5;
+                int offset = (numeroPagina - 1) * trabajosPorPagina;
+
+                var trabajosDeCliente = await _context.Trabajos
+                    .FromSqlRaw(
+                        "SELECT t.Id, t.Nombre, t.ClienteId, t.PresupuestoId, t.Descripcion, " +
+                        "t.Fecha, t.EstadoTrabajo, c.Nombre AS ClienteNombre " +
+                        "FROM dbo.Trabajo AS t " +
+                        "INNER JOIN dbo.Cliente AS c ON t.ClienteId = c.Id " +
+                        "WHERE t.ClienteId = {0} " +
+                        "ORDER BY t.Fecha DESC " +
+                        "OFFSET {1} ROWS FETCH NEXT {2} ROWS ONLY",
+                        clienteID, offset, trabajosPorPagina)
+                    .ToListAsync();
+                return trabajosDeCliente;
             }
-            catch (DbUpdateException ex)
+            catch (Exception ex)
             {
                 throw new Exception("Ocurrio un error al obtener el historial de trabajos", ex);
             }
-
-            return null;
         }
     }
 }
