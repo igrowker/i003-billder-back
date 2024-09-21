@@ -87,10 +87,23 @@ namespace Billder.API.Controllers
                 return StatusCode(500, ex.Message);
             }
         }
-        //[HttpGet]
-        //public async Task<IActionResult> GetHistorialDeTrabajos(int clienteID, int numeroPagina)
-        //{
-
-        //}
+        [HttpGet]
+        public async Task<IActionResult> GetHistorialDeTrabajos(int clienteID, int numeroPagina)
+        {
+            if(clienteID == 0)
+            {
+                return NotFound("No se pudo encontrar al cliente");
+            }
+            try
+            {
+                var trabajos = await _service.GetHistorialDeTrabajos(clienteID,numeroPagina);
+                return Ok(trabajos);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error al obtener el historial");
+                return StatusCode(500, ex.Message);
+            }
+        }
     }
 }
