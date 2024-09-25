@@ -54,18 +54,27 @@ namespace Billder.Infrastructure.Data
                     .HasColumnType("datetime")
                     .HasDefaultValueSql("(getdate())");
 
+                entity.Property(e => e.Identificacion).HasMaxLength(50);
+
                 entity.Property(e => e.Nombre)
                     .HasMaxLength(255)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.NroIdentificacion)
+                    .HasMaxLength(50)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.Pais)
+                    .HasMaxLength(100)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.Provincia)
+                    .HasMaxLength(100)
                     .IsUnicode(false);
 
                 entity.Property(e => e.Telefono)
                     .HasMaxLength(30)
                     .IsUnicode(false);
-
-                entity.HasOne(d => d.UsuarioRegistrado)
-                    .WithMany(p => p.Clientes)
-                    .HasForeignKey(d => d.UsuarioRegistradoId)
-                    .HasConstraintName("FK__Cliente__Usuario__3D5E1FD2");
             });
 
             modelBuilder.Entity<Contrato>(entity =>
@@ -208,10 +217,10 @@ namespace Billder.Infrastructure.Data
             {
                 entity.ToTable("UsuarioRegistrado");
 
-                entity.HasIndex(e => e.NroIdentificacion, "UQ__UsuarioR__05462304C82803C6")
+                entity.HasIndex(e => e.NroIdentificacion, "UQ__UsuarioR__05462304C5191D5E")
                     .IsUnique();
 
-                entity.HasIndex(e => e.Email, "UQ__UsuarioR__A9D105345A180B1A")
+                entity.HasIndex(e => e.Email, "UQ__UsuarioR__A9D105349D2EDC40")
                     .IsUnique();
 
                 entity.Property(e => e.Ciudad)

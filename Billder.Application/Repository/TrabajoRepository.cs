@@ -89,10 +89,9 @@ namespace Billder.Application.Repository
                 var trabajosDeCliente = await _context.Trabajos
             .FromSqlRaw(
                 "SELECT t.Id, t.Nombre, t.ClienteId, t.PresupuestoId, t.Descripcion, " +
-                "t.Fecha, t.EstadoTrabajo, u.FullName AS ClienteNombre " +
+                "t.Fecha, t.EstadoTrabajo, c.Nombre AS ClienteNombre " +
                 "FROM dbo.Trabajo AS t " +
                 "INNER JOIN dbo.Cliente AS c ON t.ClienteId = c.Id " +
-                "INNER JOIN dbo.UsuarioRegistrado AS u ON c.UsuarioRegistradoId = u.Id " +
                 "WHERE t.ClienteId = {0} " +
                 "ORDER BY t.Fecha DESC " +
                 "OFFSET {1} ROWS FETCH NEXT {2} ROWS ONLY",
