@@ -3,13 +3,18 @@ using System.Collections.Generic;
 
 namespace Billder.Infrastructure.Entities
 {
-    public partial class Usuario
+    public partial class UsuarioRegistrado
     {
+        public UsuarioRegistrado()
+        {
+            Clientes = new HashSet<Cliente>();
+        }
+
         public int Id { get; set; }
         public string FullName { get; set; } = null!;
         public string Email { get; set; } = null!;
         public string Identificacion { get; set; } = null!;
-        public string? NroIdentificacion { get; set; }
+        public string NroIdentificacion { get; set; } = null!;
         public DateTime? FechaNacimiento { get; set; }
         public string? Direccion { get; set; }
         public string? Ciudad { get; set; }
@@ -17,5 +22,7 @@ namespace Billder.Infrastructure.Entities
         public string? Pais { get; set; }
         public string? Telefono { get; set; }
         public string Password { get; set; } = null!;
+
+        public virtual ICollection<Cliente> Clientes { get; set; }
     }
 }

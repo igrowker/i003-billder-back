@@ -26,7 +26,7 @@ namespace Billder.Infrastructure.Data
         public virtual DbSet<PresupuestoEmpleado> PresupuestoEmpleados { get; set; } = null!;
         public virtual DbSet<PresupuestoMaterial> PresupuestoMaterials { get; set; } = null!;
         public virtual DbSet<Trabajo> Trabajos { get; set; } = null!;
-        public virtual DbSet<Usuario> Usuarios { get; set; } = null!;
+        public virtual DbSet<UsuarioRegistrado> UsuarioRegistrados { get; set; } = null!;
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
@@ -38,6 +38,10 @@ namespace Billder.Infrastructure.Data
                     .HasMaxLength(100)
                     .IsUnicode(false);
 
+                entity.Property(e => e.Descripcion)
+                    .HasMaxLength(500)
+                    .IsUnicode(false);
+
                 entity.Property(e => e.Direccion)
                     .HasMaxLength(100)
                     .IsUnicode(false);
@@ -46,27 +50,22 @@ namespace Billder.Infrastructure.Data
                     .HasMaxLength(100)
                     .IsUnicode(false);
 
-                entity.Property(e => e.Identificacion).HasMaxLength(50);
+                entity.Property(e => e.FechaAlta)
+                    .HasColumnType("datetime")
+                    .HasDefaultValueSql("(getdate())");
 
                 entity.Property(e => e.Nombre)
                     .HasMaxLength(255)
                     .IsUnicode(false);
 
-                entity.Property(e => e.NroIdentificacion)
-                    .HasMaxLength(50)
-                    .IsUnicode(false);
-
-                entity.Property(e => e.Pais)
-                    .HasMaxLength(100)
-                    .IsUnicode(false);
-
-                entity.Property(e => e.Provincia)
-                    .HasMaxLength(100)
-                    .IsUnicode(false);
-
                 entity.Property(e => e.Telefono)
-                    .HasMaxLength(50)
+                    .HasMaxLength(30)
                     .IsUnicode(false);
+
+                entity.HasOne(d => d.UsuarioRegistrado)
+                    .WithMany(p => p.Clientes)
+                    .HasForeignKey(d => d.UsuarioRegistradoId)
+                    .HasConstraintName("FK__Cliente__Usuario__3D5E1FD2");
             });
 
             modelBuilder.Entity<Contrato>(entity =>
@@ -80,7 +79,8 @@ namespace Billder.Infrastructure.Data
                 entity.HasOne(d => d.Trabajo)
                     .WithMany(p => p.Contratos)
                     .HasForeignKey(d => d.TrabajoId)
-                    .HasConstraintName("FK__Contrato__Trabaj__52593CB8");
+                    .OnDelete(DeleteBehavior.Cascade)
+                    .HasConstraintName("FK__Contrato__Trabaj__4AB81AF0");
             });
 
             modelBuilder.Entity<Empleado>(entity =>
@@ -124,7 +124,8 @@ namespace Billder.Infrastructure.Data
                 entity.HasOne(d => d.Trabajo)
                     .WithMany(p => p.Pagos)
                     .HasForeignKey(d => d.TrabajoId)
-                    .HasConstraintName("FK__Pago__TrabajoId__534D60F1");
+                    .OnDelete(DeleteBehavior.Cascade)
+                    .HasConstraintName("FK__Pago__TrabajoId__4E88ABD4");
             });
 
             modelBuilder.Entity<Presupuesto>(entity =>
@@ -145,12 +146,12 @@ namespace Billder.Infrastructure.Data
                 entity.HasOne(d => d.Empleado)
                     .WithMany(p => p.PresupuestoEmpleados)
                     .HasForeignKey(d => d.EmpleadoId)
-                    .HasConstraintName("FK__Presupues__Emple__4F7CD00D");
+                    .HasConstraintName("FK__Presupues__Emple__5441852A");
 
                 entity.HasOne(d => d.Presupuesto)
                     .WithMany(p => p.PresupuestoEmpleados)
                     .HasForeignKey(d => d.PresupuestoId)
-                    .HasConstraintName("FK__Presupues__Presu__4E88ABD4");
+                    .HasConstraintName("FK__Presupues__Presu__534D60F1");
             });
 
             modelBuilder.Entity<PresupuestoMaterial>(entity =>
@@ -166,12 +167,14 @@ namespace Billder.Infrastructure.Data
                 entity.HasOne(d => d.Material)
                     .WithMany(p => p.PresupuestoMaterials)
                     .HasForeignKey(d => d.MaterialID)
-                    .HasConstraintName("FK__Presupues__Mater__5535A963");
+                    .OnDelete(DeleteBehavior.Cascade)
+                    .HasConstraintName("FK__Presupues__Mater__5812160E");
 
                 entity.HasOne(d => d.Presupuesto)
                     .WithMany(p => p.PresupuestoMaterials)
                     .HasForeignKey(d => d.PresupuestoID)
-                    .HasConstraintName("FK__Presupues__Presu__5441852A");
+                    .OnDelete(DeleteBehavior.Cascade)
+                    .HasConstraintName("FK__Presupues__Presu__571DF1D5");
             });
 
             modelBuilder.Entity<Trabajo>(entity =>
@@ -193,17 +196,23 @@ namespace Billder.Infrastructure.Data
                 entity.HasOne(d => d.Cliente)
                     .WithMany(p => p.Trabajos)
                     .HasForeignKey(d => d.ClienteId)
-                    .HasConstraintName("FK__Trabajo__Cliente__5070F446");
+                    .HasConstraintName("FK__Trabajo__Cliente__46E78A0C");
 
                 entity.HasOne(d => d.Presupuesto)
                     .WithMany(p => p.Trabajos)
                     .HasForeignKey(d => d.PresupuestoId)
-                    .HasConstraintName("FK__Trabajo__Presupu__5165187F");
+                    .HasConstraintName("FK__Trabajo__Presupu__47DBAE45");
             });
 
-            modelBuilder.Entity<Usuario>(entity =>
+            modelBuilder.Entity<UsuarioRegistrado>(entity =>
             {
-                entity.ToTable("Usuario");
+                entity.ToTable("UsuarioRegistrado");
+
+                entity.HasIndex(e => e.NroIdentificacion, "UQ__UsuarioR__05462304C82803C6")
+                    .IsUnique();
+
+                entity.HasIndex(e => e.Email, "UQ__UsuarioR__A9D105345A180B1A")
+                    .IsUnique();
 
                 entity.Property(e => e.Ciudad)
                     .HasMaxLength(100)
