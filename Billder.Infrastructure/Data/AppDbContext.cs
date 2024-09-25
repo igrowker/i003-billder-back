@@ -133,7 +133,6 @@ namespace Billder.Infrastructure.Data
                 entity.HasOne(d => d.Trabajo)
                     .WithMany(p => p.Pagos)
                     .HasForeignKey(d => d.TrabajoId)
-                    .OnDelete(DeleteBehavior.Cascade)
                     .HasConstraintName("FK__Pago__TrabajoId__4E88ABD4");
             });
 
@@ -155,6 +154,7 @@ namespace Billder.Infrastructure.Data
                 entity.HasOne(d => d.Empleado)
                     .WithMany(p => p.PresupuestoEmpleados)
                     .HasForeignKey(d => d.EmpleadoId)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
                     .HasConstraintName("FK__Presupues__Emple__5441852A");
 
                 entity.HasOne(d => d.Presupuesto)
@@ -176,7 +176,6 @@ namespace Billder.Infrastructure.Data
                 entity.HasOne(d => d.Material)
                     .WithMany(p => p.PresupuestoMaterials)
                     .HasForeignKey(d => d.MaterialID)
-                    .OnDelete(DeleteBehavior.Cascade)
                     .HasConstraintName("FK__Presupues__Mater__5812160E");
 
                 entity.HasOne(d => d.Presupuesto)
@@ -217,10 +216,10 @@ namespace Billder.Infrastructure.Data
             {
                 entity.ToTable("UsuarioRegistrado");
 
-                entity.HasIndex(e => e.NroIdentificacion, "UQ__UsuarioR__05462304C5191D5E")
+                entity.HasIndex(e => e.NroIdentificacion, "UQ__UsuarioR__05462304DB54B046")
                     .IsUnique();
 
-                entity.HasIndex(e => e.Email, "UQ__UsuarioR__A9D105349D2EDC40")
+                entity.HasIndex(e => e.Email, "UQ__UsuarioR__A9D1053417FF52DA")
                     .IsUnique();
 
                 entity.Property(e => e.Ciudad)
