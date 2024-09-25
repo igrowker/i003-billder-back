@@ -96,12 +96,12 @@ namespace Billder.API.Controllers
             }
             try
             {
-                var usuarios = await _service.GetHistorialDeTrabajos(clienteID,numeroPagina);
-                return Ok(usuarios);
+                var trabajos = await _service.GetHistorialDeTrabajos(clienteID,numeroPagina);
+                return Ok(trabajos);
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex, "Error al obtener los usuarios registrados");
+                _logger.LogError(ex, "Error al obtener el historial de trabajos");
                 return StatusCode(500, ex.Message);
             }
         }

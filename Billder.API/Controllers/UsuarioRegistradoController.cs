@@ -59,7 +59,7 @@ namespace Billder.API.Controllers
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex, "Error al actualizar el trabajo");
+                _logger.LogError(ex, "Error al actualizar el usuario");
                 return StatusCode(500, ex.Message);
             }
         }
@@ -76,7 +76,7 @@ namespace Billder.API.Controllers
                 var usuarioBorrado = await _service.DeleteUsuarioRegistrado(id);
                 if (usuarioBorrado == 0)
                 {
-                    return NotFound("No se encontro un trabajo para eliminar");
+                    return NotFound("No se encontro un usuario para eliminar");
                 }
                 return NoContent();
             }
@@ -95,12 +95,12 @@ namespace Billder.API.Controllers
             }
             try
             {
-                var trabajos = await _service.GetAllUsuariosRegistrados(clienteID,numeroPagina);
-                return Ok(trabajos);
+                var usuarios = await _service.GetAllUsuariosRegistrados(clienteID,numeroPagina);
+                return Ok(usuarios);
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex, "Error al obtener el historial");
+                _logger.LogError(ex, "Error al obtener los usuarios registrados");
                 return StatusCode(500, ex.Message);
             }
         }
