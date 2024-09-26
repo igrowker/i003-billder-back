@@ -28,13 +28,23 @@ namespace Billder.Application.Repository
 
         public async Task<bool> DeletePresupuestoById(int id)
         {
-            var presupuesto = await _context.Presupuestos.FindAsync(id);
+            var presupuesto = await _context.Presupuestos.Include(p => p.PresupuestoEmpleados)
+                                                         .Include(p => p.PresupuestoMaterials)
+                                                         .FirstOrDefaultAsync(p => p.Id == id);    
 
             if (presupuesto == null)
             {
                 return false;
             }
 
+            if (presupuesto.PresupuestoEmpleados != null && presupuesto.PresupuestoEmpleados.Any())
+            {
+                _context.PresupuestoEmpleados.RemoveRange(presupuesto.PresupuestoEmpleados);
+            }
+            if (presupuesto.PresupuestoMaterials != null && presupuesto.PresupuestoMaterials.Any())
+            {
+                _context.PresupuestoMaterials.RemoveRange(presupuesto.PresupuestoMaterials);
+            }
             _context.Presupuestos.Remove(presupuesto);
             await _context.SaveChangesAsync();
             return true;

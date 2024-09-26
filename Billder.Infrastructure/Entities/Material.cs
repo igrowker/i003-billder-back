@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Text.Json.Serialization;
 
 namespace Billder.Infrastructure.Entities
 {
@@ -12,7 +13,7 @@ namespace Billder.Infrastructure.Entities
 
         public int Id { get; set; }
         public string? Descripcion { get; set; }
-
+        [JsonIgnore]
         public virtual ICollection<PresupuestoMaterial> PresupuestoMaterials { get; set; }
     }
 }

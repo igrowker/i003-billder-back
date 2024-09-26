@@ -14,6 +14,19 @@ builder.Services.AddScoped<TrabajoService>();
 
 builder.Services.AddScoped<IPresupuestoRepository, PresupuestoRepository>();
 builder.Services.AddScoped<IPresupuestoService, PresupuestoService>();
+
+builder.Services.AddScoped<IMaterialRepository, MaterialRepository>();
+builder.Services.AddScoped<IMaterialService, MaterialService>();
+
+builder.Services.AddScoped<IEmpleadoRepository, EmpleadoRepository>();
+builder.Services.AddScoped<IEmpleadoService, EmpleadoService>();
+
+builder.Services.AddScoped<IPresupuestoEmpleadoRepository, PresupuestoEmpleadoRepository>();
+builder.Services.AddScoped<IPresupuestoEmpleadoService, PresupuestoEmpleadoService>();
+
+builder.Services.AddScoped<IPresupuestoMaterialRepository, PresupuestoMaterialRepository>();
+builder.Services.AddScoped<IPresupuestoMaterialService, PresupuestoMaterialService>();
+
 builder.Services.AddControllers();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
