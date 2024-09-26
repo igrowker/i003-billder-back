@@ -101,7 +101,7 @@ namespace Billder.API.Controllers
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex, "Error al obtener el historial");
+                _logger.LogError(ex, "Error al obtener el historial de trabajos");
                 return StatusCode(500, ex.Message);
             }
         }

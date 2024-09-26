@@ -19,7 +19,7 @@ namespace Billder.Application.Repository
             try
             {
                 await _context.Trabajos.AddAsync(trabajo);
-                await _context?.SaveChangesAsync();
+                await _context.SaveChangesAsync();
                 return trabajo;
             }
             catch (DbUpdateException ex)
@@ -34,11 +34,12 @@ namespace Billder.Application.Repository
             {
                 return await _context.Trabajos.FindAsync(id);
             }
-            catch (Exception ex) {
+            catch (Exception ex)
+            {
                 throw new Exception("Ocurrio un error al obtener el trabajo por ID ", ex);
             }
         }
-        public async Task<Trabajo> UpdateTrabajoRepository( Trabajo trabajoRecibido)
+        public async Task<Trabajo> UpdateTrabajoRepository(Trabajo trabajoRecibido)
         {
             try
             {
@@ -55,7 +56,7 @@ namespace Billder.Application.Repository
                 await _context.SaveChangesAsync();
                 return objetoTrabajo;
             }
-            catch (DbUpdateException ex) 
+            catch (DbUpdateException ex)
             {
                 throw new Exception("Ocurrio un error al actualizar el trabajo", ex);
             }
@@ -64,7 +65,7 @@ namespace Billder.Application.Repository
         public async Task<int> DeleteTrabajoRepository(int id)
         {
             var trabajoEncontrado = await _context.Trabajos.FindAsync(id);
-            if(trabajoEncontrado == null)
+            if (trabajoEncontrado == null)
             {
                 return 0;
             }
@@ -72,6 +73,7 @@ namespace Billder.Application.Repository
             return await _context.SaveChangesAsync(); //devuelve el N° de filas afectadas
         }
 
+        //agregar otros ordenamientos de ser necesario
         public async Task<List<Trabajo>> GetHistorialDeTrabajosRepository(int clienteID, int numeroPagina)
         {
             try
@@ -85,16 +87,16 @@ namespace Billder.Application.Repository
                 int offset = (numeroPagina - 1) * trabajosPorPagina;
 
                 var trabajosDeCliente = await _context.Trabajos
-                    .FromSqlRaw(
-                        "SELECT t.Id, t.Nombre, t.ClienteId, t.PresupuestoId, t.Descripcion, " +
-                        "t.Fecha, t.EstadoTrabajo, c.Nombre AS ClienteNombre " +
-                        "FROM dbo.Trabajo AS t " +
-                        "INNER JOIN dbo.Cliente AS c ON t.ClienteId = c.Id " +
-                        "WHERE t.ClienteId = {0} " +
-                        "ORDER BY t.Fecha DESC " +
-                        "OFFSET {1} ROWS FETCH NEXT {2} ROWS ONLY",
-                        clienteID, offset, trabajosPorPagina)
-                    .ToListAsync();
+            .FromSqlRaw(
+                "SELECT t.Id, t.Nombre, t.ClienteId, t.PresupuestoId, t.Descripcion, " +
+                "t.Fecha, t.EstadoTrabajo, c.Nombre AS ClienteNombre " +
+                "FROM dbo.Trabajo AS t " +
+                "INNER JOIN dbo.Cliente AS c ON t.ClienteId = c.Id " +
+                "WHERE t.ClienteId = {0} " +
+                "ORDER BY t.Fecha DESC " +
+                "OFFSET {1} ROWS FETCH NEXT {2} ROWS ONLY",
+                clienteID, offset, trabajosPorPagina)
+            .ToListAsync();
                 return trabajosDeCliente;
             }
             catch (Exception ex)
