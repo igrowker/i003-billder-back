@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Text.Json.Serialization;
 
 namespace Billder.Infrastructure.Entities
 {
@@ -12,7 +13,9 @@ namespace Billder.Infrastructure.Entities
         public decimal? Costo { get; set; }
         public string? Observacion { get; set; }
 
+        [JsonIgnore]
         public virtual Material? Material { get; set; }
+        [JsonIgnore]
         public virtual Presupuesto? Presupuesto { get; set; }
     }
 }
