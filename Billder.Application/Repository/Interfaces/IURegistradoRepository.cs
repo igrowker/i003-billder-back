@@ -13,6 +13,6 @@ namespace Billder.Application.Repository.Interfaces
         Task<UsuarioRegistrado> UpdateUsuarioRegistradoRepository(UsuarioRegistrado usuario);
         Task<UsuarioRegistrado> GetUsuarioRegistradoByIDRepository(int id);
         Task<int> DeleteUsuarioRegistradoRepository(int id);
-        Task<List<UsuarioRegistrado>> GetAllUsuariosRegistradosRepository(int usuarioID, int numeroPagina);
+        Task<List<UsuarioRegistrado>> GetAllUsuariosRegistradosRepository(int numeroPagina, string ordenamiento);
     }
 }

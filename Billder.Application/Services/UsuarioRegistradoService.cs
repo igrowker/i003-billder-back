@@ -8,7 +8,13 @@ namespace Billder.Application.Services
     public class UsuarioRegistradoService : IURegistradoInterface
     {
         private readonly IURegistradoRepository _uRegistradoRepository;
-        public async Task<UsuarioRegistrado> CrearUsuarioRegistrado(UsuarioRegistrado usuario)
+
+        public UsuarioRegistradoService(IURegistradoRepository uRegistradoRepository)
+        {
+            _uRegistradoRepository = uRegistradoRepository;
+        }
+
+            public async Task<UsuarioRegistrado> CrearUsuarioRegistrado(UsuarioRegistrado usuario)
         {
             return await _uRegistradoRepository.CrearUsuarioRegistradoRepository(usuario);
         }
@@ -18,9 +24,9 @@ namespace Billder.Application.Services
             return await _uRegistradoRepository.DeleteUsuarioRegistradoRepository(id);
         }
 
-        public async Task<List<UsuarioRegistrado>> GetAllUsuariosRegistrados(int usuarioID, int numeroPagina)
+        public async Task<List<UsuarioRegistrado>> GetAllUsuariosRegistrados(int numeroPagina, string ordenamiento)
         {
-            return await _uRegistradoRepository.GetAllUsuariosRegistradosRepository(usuarioID, numeroPagina);
+            return await _uRegistradoRepository.GetAllUsuariosRegistradosRepository(numeroPagina, ordenamiento);
         }
 
         public async Task<UsuarioRegistrado> GetUsuarioRegistradoByID(int id)

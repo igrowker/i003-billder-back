@@ -87,15 +87,20 @@ namespace Billder.API.Controllers
             }
         }
         [HttpGet]
-        public async Task<IActionResult> GetAllUsuarios(int clienteID, int numeroPagina)
+        [Route("GetAllUsuarios")]
+        public async Task<IActionResult> GetAllUsuarios(int numeroPagina, string ordenamiento)
         {
-            if (clienteID == 0)
-            {
-                return NotFound("No se pudo encontrar al cliente");
-            }
             try
             {
-                var usuarios = await _service.GetAllUsuariosRegistrados(clienteID,numeroPagina);
+                if (numeroPagina < 1)
+                {
+                    throw new Exception("Pagina invalida");
+                }
+                if (ordenamiento != "ASC" && ordenamiento != "DESC")
+                {
+                    throw new Exception("Valor de ordenamiento invalido. Debe ser 'ASC' o 'DESC'.");
+                }
+                var usuarios = await _service.GetAllUsuariosRegistrados(numeroPagina, ordenamiento);
                 return Ok(usuarios);
             }
             catch (Exception ex)

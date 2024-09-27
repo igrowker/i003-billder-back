@@ -41,35 +41,25 @@ namespace Billder.Application.Repository
             return await _context.SaveChangesAsync();
         }
 
-        public async Task<List<UsuarioRegistrado>> GetAllUsuariosRegistradosRepository(int usuarioID, int numeroPagina)
+        public async Task<List<UsuarioRegistrado>> GetAllUsuariosRegistradosRepository(int numeroPagina, string ordenamiento)
         {
             try
             {
-                var usuarioValido = await _context.UsuarioRegistrados.FindAsync(usuarioID);
-                if (usuarioValido == null)
-                {
-                    throw new Exception("El Usuario no pudo ser encontrado");
-                }
                 int usuariosPorPagina = 15;
                 int offset = (numeroPagina - 1) * usuariosPorPagina;
 
                 var allUsers = await _context.UsuarioRegistrados
             .FromSqlRaw(
-                "SELECT t.Id, t.Nombre, t.ClienteId, t.PresupuestoId, t.Descripcion, " +
-                "t.Fecha, t.EstadoTrabajo, u.FullName AS ClienteNombre " +
-                "FROM dbo.Trabajo AS t " +
-                "INNER JOIN dbo.Cliente AS c ON t.ClienteId = c.Id " +
-                "INNER JOIN dbo.UsuarioRegistrado AS u ON c.UsuarioRegistradoId = u.Id " +
-                "WHERE t.ClienteId = {0} " +
-                "ORDER BY t.Fecha DESC " +
-                "OFFSET {1} ROWS FETCH NEXT {2} ROWS ONLY",
-                usuarioID, offset, usuariosPorPagina)
+                "SELECT * from UsuarioRegistrado " +
+                $"ORDER BY FullName {ordenamiento} " +
+                "OFFSET {0} ROWS FETCH NEXT {1} ROWS ONLY",
+                offset, usuariosPorPagina)
             .ToListAsync();
                 return allUsers;
             }
             catch (Exception ex)
             {
-                throw new Exception("Ocurrio un error al obtener el historial de trabajos", ex);
+                throw new Exception("Ocurrio un error al obtener todos los usuarios", ex);
             }
         }
 

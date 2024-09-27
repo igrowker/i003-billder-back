@@ -27,16 +27,12 @@ x86/
 *.mdf
 *.ldf
 *.sql
-
+*.env
 # Entity Framework migration files
 Migrations/
 
 # Dotnet publish directory
 publish/
-
-# Sensitive config files
-appsettings.Development.json
-appsettings.*.json # Catch any environment-specific appsettings files
 
 # IDE-specific settings
 *.csproj.user
@@ -53,5 +49,5 @@ logs/
 *.cache
 
 # Appsettings files
-appsettings.json
-appsettings*.json
+#appsettings.json
+#appsettings*.json
