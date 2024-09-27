@@ -37,7 +37,7 @@ builder.Services.AddInMemoryRateLimiting();
 // the clientId/clientIp resolvers use IHttpContextAccessor.
 builder.Services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
 
-var connectionString = Environment.GetEnvironmentVariable("LOCAL_DB_CONNECTION_STRING");
+var connectionString = Environment.GetEnvironmentVariable("REMOTE_DB_CONNECTION_STRING");
 
 builder.Services.AddDbContext<AppDbContext>(options =>
     options.UseSqlServer(connectionString));
