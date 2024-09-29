@@ -25,7 +25,8 @@ namespace Billder.Application.Repository
 
         public async Task<Empleado> GetEmpleadoById(int id)
         {
-            return await _context.Empleados.FindAsync(id);
+            var result = await _context.Empleados.FindAsync(id);
+            return result ?? null!;
         }
 
         public async Task<Empleado> CreateEmpleado(Empleado empleado)
@@ -44,7 +45,7 @@ namespace Billder.Application.Repository
             }
             existingEmpleado.Fullname = empleado.Fullname;
             existingEmpleado.Identificacion = empleado.Identificacion;
-            existingEmpleado.NroIdentificacion = empleado?.NroIdentificacion;
+            existingEmpleado.NroIdentificacion = empleado.NroIdentificacion;
             existingEmpleado.Puesto = empleado?.Puesto;
 
             await _context.SaveChangesAsync();

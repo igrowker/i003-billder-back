@@ -3,9 +3,13 @@ using Billder.Application.Repository;
 using Billder.Application.Repository.Interfaces;
 using Billder.Application.Services;
 using Billder.Infrastructure.Data;
+using Billder.Application.Custom;
 using Microsoft.EntityFrameworkCore;
 using AspNetCoreRateLimit;
 using DotNetEnv;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.IdentityModel.Tokens;
+using System.Text;
 
 Env.Load();
 var builder = WebApplication.CreateBuilder(args);
@@ -50,11 +54,42 @@ builder.Services.AddInMemoryRateLimiting();
 // the clientId/clientIp resolvers use IHttpContextAccessor.
 builder.Services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
 
-var connectionString = Environment.GetEnvironmentVariable("LOCAL_DB_CONNECTION_STRING");
+/*var connectionString = Environment.GetEnvironmentVariable("LOCAL_DB_CONNECTION_STRING");
 
 builder.Services.AddDbContext<AppDbContext>(options =>
-    options.UseSqlServer(connectionString));
+    options.UseSqlServer(connectionString));*/
+builder.Services.AddDbContext<AppDbContext>(options =>
+    options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
 builder.Services.AddScoped<TrabajoRepository>();
+builder.Services.AddSingleton<Utilidades>();
+
+builder.Services.AddAuthentication(config =>
+{
+    config.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+    config.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+}).AddJwtBearer(config =>
+{
+    config.RequireHttpsMetadata = false;
+    config.SaveToken = true;
+    config.TokenValidationParameters = new TokenValidationParameters
+    {
+        ValidateIssuerSigningKey = true,
+        ValidateIssuer = false,
+        ValidateAudience = false,
+        ValidateLifetime = true,
+        ClockSkew = TimeSpan.Zero,
+        IssuerSigningKey = new SymmetricSecurityKey
+        (Encoding.UTF8.GetBytes(builder.Configuration["Jwt:key"]!))
+    };
+});
+
+builder.Services.AddCors(options =>
+{
+    options.AddPolicy("NewPolicy", app =>
+    {
+        app.AllowAnyOrigin().AllowAnyHeader().AllowAnyMethod();
+    });
+});
 var app = builder.Build();
 
 // habilita AspNetCoreRateLimit Middleware
@@ -69,8 +104,10 @@ if (app.Environment.IsDevelopment())
 
 app.UseHttpsRedirection();
 
+app.UseCors("NewPolicy");
+app.UseAuthentication();
 app.UseAuthorization();
 
-app.MapControllers();
+app.MapControllers();   
 
 app.Run();

@@ -43,7 +43,8 @@ namespace Billder.Application.Repository
 
         public async Task<PresupuestoMaterial> GetPresupuestoMaterialById(int id)
         {
-            return await _context.PresupuestoMaterials.FindAsync(id);
+            var result = await _context.PresupuestoMaterials.FindAsync(id);
+            return result ?? null!;
         }
 
         public async Task<bool> UpdatePresupuestoMaterial(PresupuestoMaterial presupuestoMaterial)
