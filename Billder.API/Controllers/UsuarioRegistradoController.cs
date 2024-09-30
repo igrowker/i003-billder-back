@@ -1,7 +1,10 @@
-﻿using Billder.Application.Interfaces;
+﻿
+using Billder.Application.Interfaces;
 using Billder.Application.Services;
 using Billder.Infrastructure.Entities;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+
 namespace Billder.API.Controllers
 {
     [Route("api/[controller]")]
@@ -10,11 +13,13 @@ namespace Billder.API.Controllers
     {
         private readonly IURegistradoInterface _service;
         private readonly ILogger<UsuarioRegistradoController> _logger;
+        private readonly Utilidades _utilidades;
 
-        public UsuarioRegistradoController(IURegistradoInterface uRegistradoData, ILogger<UsuarioRegistradoController> logger)
+        public UsuarioRegistradoController(IURegistradoInterface uRegistradoData, ILogger<UsuarioRegistradoController> logger, Utilidades utilidades)
         {
             _service = uRegistradoData;
             _logger = logger;
+            _utilidades = utilidades;
         }
         [HttpGet("{id}")]
         public async Task<IActionResult> GetUsuarioByID(int id)
@@ -34,6 +39,8 @@ namespace Billder.API.Controllers
             {
                 return BadRequest("El campo Usuario no debe estar vacío");
             }
+            //encripta la pass cuando se crea el usuario
+            usuario.Password = _utilidades.encriptarSHA256(usuario.Password);
             try
             {
                 var usuarioCreado = await _service.CrearUsuarioRegistrado(usuario);
@@ -46,6 +53,7 @@ namespace Billder.API.Controllers
             }
         }
         [HttpPut]
+        [Authorize]
         public async Task<IActionResult> UpdateUsuario(UsuarioRegistrado usuario)
         {
             if (usuario == null)
@@ -63,6 +71,7 @@ namespace Billder.API.Controllers
                 return StatusCode(500, ex.Message);
             }
         }
+        [Authorize]
         [HttpDelete]
         public async Task<IActionResult> DeleteUsuario(int id)
         {
@@ -86,6 +95,7 @@ namespace Billder.API.Controllers
                 return StatusCode(500, ex.Message);
             }
         }
+        [Authorize(Roles = "Admin")]
         [HttpGet]
         [Route("GetAllUsuarios")]
         public async Task<IActionResult> GetAllUsuarios(int numeroPagina, string ordenamiento)

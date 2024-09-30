@@ -1,13 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Text;
 using Microsoft.IdentityModel.Tokens;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Security.Cryptography;
-using System.Text;
 using Billder.Infrastructure.Entities;
 using Microsoft.Extensions.Configuration;
 
@@ -40,7 +35,7 @@ namespace Billder.Application.Custom
         {
             var userClaims = new[]
             {
-                new Claim(ClaimTypes.NameIdentifier, usuario.FullName.ToString()),                
+                new Claim(ClaimTypes.NameIdentifier, usuario.Id.ToString()), //cambiado FullName por Id
                 new Claim(ClaimTypes.Email, usuario.Email!),
             };
             var securityKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_configuration["Jwt:key"]));
