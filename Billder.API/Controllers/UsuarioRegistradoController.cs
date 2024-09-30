@@ -1,7 +1,11 @@
-﻿using Billder.Application.Interfaces;
+﻿
+using Billder.Application.Interfaces;
 using Billder.Application.Services;
 using Billder.Infrastructure.Entities;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Billder.Application.Custom;
+using Billder.Infrastructure.DTOs;
 namespace Billder.API.Controllers
 {
     [Route("api/[controller]")]
@@ -10,15 +14,19 @@ namespace Billder.API.Controllers
     {
         private readonly IURegistradoInterface _service;
         private readonly ILogger<UsuarioRegistradoController> _logger;
+        private readonly Utilidades _utilidades;
 
-        public UsuarioRegistradoController(IURegistradoInterface uRegistradoData, ILogger<UsuarioRegistradoController> logger)
+        public UsuarioRegistradoController(IURegistradoInterface uRegistradoData, ILogger<UsuarioRegistradoController> logger, Utilidades utilidades)
         {
             _service = uRegistradoData;
             _logger = logger;
+            _utilidades = utilidades;
         }
+        [Authorize]
         [HttpGet("{id}")]
         public async Task<IActionResult> GetUsuarioByID(int id)
         {
+
             var usuario = await _service.GetUsuarioRegistradoByID(id);
             if (usuario == null)
             {
@@ -28,15 +36,30 @@ namespace Billder.API.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> CrearUsuario([FromBody] UsuarioRegistrado usuario)
+        public async Task<IActionResult> CrearUsuario([FromBody] UsuarioDTO usuarioDTO)
         {
-            if (usuario == null)
+            if (usuarioDTO == null)
             {
                 return BadRequest("El campo Usuario no debe estar vacío");
             }
+            var usuarioRegistrado = new UsuarioRegistrado
+            {
+                FullName = usuarioDTO.FullName,
+                Email = usuarioDTO.Email,
+                Identificacion = usuarioDTO.Identificacion,
+                NroIdentificacion = usuarioDTO.NroIdentificacion,
+                FechaNacimiento = usuarioDTO.FechaNacimiento,
+                Direccion = usuarioDTO.Direccion,
+                Ciudad = usuarioDTO.Ciudad,
+                Provincia = usuarioDTO.Provincia,
+                Pais = usuarioDTO.Pais,
+                Telefono = usuarioDTO.Telefono,
+                Password = _utilidades.encriptarSHA256(usuarioDTO.Password)
+            };
+
             try
             {
-                var usuarioCreado = await _service.CrearUsuarioRegistrado(usuario);
+                var usuarioCreado = await _service.CrearUsuarioRegistrado(usuarioRegistrado);
                 return CreatedAtAction(nameof(GetUsuarioByID), new { id = usuarioCreado.Id }, usuarioCreado);
             }
             catch (Exception ex)
@@ -46,6 +69,7 @@ namespace Billder.API.Controllers
             }
         }
         [HttpPut]
+        [Authorize]
         public async Task<IActionResult> UpdateUsuario(UsuarioRegistrado usuario)
         {
             if (usuario == null)
@@ -63,6 +87,7 @@ namespace Billder.API.Controllers
                 return StatusCode(500, ex.Message);
             }
         }
+        [Authorize]
         [HttpDelete]
         public async Task<IActionResult> DeleteUsuario(int id)
         {
@@ -86,6 +111,7 @@ namespace Billder.API.Controllers
                 return StatusCode(500, ex.Message);
             }
         }
+        [Authorize(Roles = "Admin")]
         [HttpGet]
         [Route("GetAllUsuarios")]
         public async Task<IActionResult> GetAllUsuarios(int numeroPagina, string ordenamiento)
