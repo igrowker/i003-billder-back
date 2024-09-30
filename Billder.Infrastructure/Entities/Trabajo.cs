@@ -12,6 +12,7 @@ namespace Billder.Infrastructure.Entities
         }
 
         public int Id { get; set; }
+        public int UsuarioId { get; set; }
         public string? Nombre { get; set; }
         public int? ClienteId { get; set; }
         public int? PresupuestoId { get; set; }
@@ -21,6 +22,7 @@ namespace Billder.Infrastructure.Entities
 
         public virtual Cliente? Cliente { get; set; }
         public virtual Presupuesto? Presupuesto { get; set; }
+        public virtual UsuarioRegistrado Usuario { get; set; } = null!;
         public virtual ICollection<Contrato> Contratos { get; set; }
         public virtual ICollection<Pago> Pagos { get; set; }
     }

@@ -1,2 +1,0 @@
-LOCAL_DB_CONNECTION_STRING="Server=DESKTOP-FRJSJ0P\\SQLEXPRESS;Database=BillderDB2;Trusted_Connection=True;TrustServerCertificate=True;"
-REMOTE_DB_CONNECTION_STRING="Data Source=SQL5112.site4now.net;Initial Catalog=db_aad76b_billderdbg4;User Id=db_aad76b_billderdbg4_admin;Password=aprobadoporchayanne1"

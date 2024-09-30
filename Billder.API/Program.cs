@@ -54,12 +54,10 @@ builder.Services.AddInMemoryRateLimiting();
 // the clientId/clientIp resolvers use IHttpContextAccessor.
 builder.Services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
 
-/*var connectionString = Environment.GetEnvironmentVariable("LOCAL_DB_CONNECTION_STRING");
+var connectionString = Environment.GetEnvironmentVariable("REMOTE_DB_CONNECTION_STRING");
 
 builder.Services.AddDbContext<AppDbContext>(options =>
-    options.UseSqlServer(connectionString));*/
-builder.Services.AddDbContext<AppDbContext>(options =>
-    options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
+    options.UseSqlServer(connectionString));
 builder.Services.AddScoped<TrabajoRepository>();
 builder.Services.AddSingleton<Utilidades>();
 
@@ -108,6 +106,6 @@ app.UseCors("NewPolicy");
 app.UseAuthentication();
 app.UseAuthorization();
 
-app.MapControllers();   
+app.MapControllers();
 
 app.Run();

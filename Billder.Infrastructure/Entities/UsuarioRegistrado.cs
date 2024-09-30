@@ -5,6 +5,19 @@ namespace Billder.Infrastructure.Entities
 {
     public partial class UsuarioRegistrado
     {
+        public UsuarioRegistrado()
+        {
+            Clientes = new HashSet<Cliente>();
+            Contratos = new HashSet<Contrato>();
+            Empleados = new HashSet<Empleado>();
+            Materials = new HashSet<Material>();
+            Pagos = new HashSet<Pago>();
+            PresupuestoEmpleados = new HashSet<PresupuestoEmpleado>();
+            PresupuestoMaterials = new HashSet<PresupuestoMaterial>();
+            Presupuestos = new HashSet<Presupuesto>();
+            Trabajos = new HashSet<Trabajo>();
+        }
+
         public int Id { get; set; }
         public string FullName { get; set; } = null!;
         public string Email { get; set; } = null!;
@@ -17,5 +30,15 @@ namespace Billder.Infrastructure.Entities
         public string? Pais { get; set; }
         public string? Telefono { get; set; }
         public string Password { get; set; } = null!;
+
+        public virtual ICollection<Cliente> Clientes { get; set; }
+        public virtual ICollection<Contrato> Contratos { get; set; }
+        public virtual ICollection<Empleado> Empleados { get; set; }
+        public virtual ICollection<Material> Materials { get; set; }
+        public virtual ICollection<Pago> Pagos { get; set; }
+        public virtual ICollection<PresupuestoEmpleado> PresupuestoEmpleados { get; set; }
+        public virtual ICollection<PresupuestoMaterial> PresupuestoMaterials { get; set; }
+        public virtual ICollection<Presupuesto> Presupuestos { get; set; }
+        public virtual ICollection<Trabajo> Trabajos { get; set; }
     }
 }

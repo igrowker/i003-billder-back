@@ -11,6 +11,7 @@ namespace Billder.Infrastructure.Entities
         }
 
         public int Id { get; set; }
+        public int UsuarioId { get; set; }
         public string Identificacion { get; set; } = null!;
         public string? NroIdentificacion { get; set; }
         public string Nombre { get; set; } = null!;
@@ -23,6 +24,7 @@ namespace Billder.Infrastructure.Entities
         public string? Pais { get; set; }
         public DateTime? FechaAlta { get; set; }
 
+        public virtual UsuarioRegistrado Usuario { get; set; } = null!;
         public virtual ICollection<Trabajo> Trabajos { get; set; }
     }
 }
