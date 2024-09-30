@@ -45,7 +45,8 @@ namespace Billder.Application.Repository
 
         public async Task<PresupuestoEmpleado> GetPresupuestoEmpleadoById(int id)
         {
-            return await _context.PresupuestoEmpleados.FindAsync(id);
+            var result = await _context.PresupuestoEmpleados.FindAsync(id);
+            return result ?? null!;
         }
 
         public async Task<bool> UpdatePresupuestoEmpleado(PresupuestoEmpleado presupuestoEmpleado)

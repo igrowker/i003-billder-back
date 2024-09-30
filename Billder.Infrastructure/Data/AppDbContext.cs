@@ -75,6 +75,12 @@ namespace Billder.Infrastructure.Data
                 entity.Property(e => e.Telefono)
                     .HasMaxLength(30)
                     .IsUnicode(false);
+
+                entity.HasOne(d => d.Usuario)
+                    .WithMany(p => p.Clientes)
+                    .HasForeignKey(d => d.UsuarioId)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
+                    .HasConstraintName("FK__Cliente__Usuario__3E52440B");
             });
 
             modelBuilder.Entity<Contrato>(entity =>
@@ -89,7 +95,13 @@ namespace Billder.Infrastructure.Data
                     .WithMany(p => p.Contratos)
                     .HasForeignKey(d => d.TrabajoId)
                     .OnDelete(DeleteBehavior.Cascade)
-                    .HasConstraintName("FK__Contrato__Trabaj__4AB81AF0");
+                    .HasConstraintName("FK__Contrato__Trabaj__4E88ABD4");
+
+                entity.HasOne(d => d.Usuario)
+                    .WithMany(p => p.Contratos)
+                    .HasForeignKey(d => d.UsuarioId)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
+                    .HasConstraintName("FK__Contrato__Usuari__4F7CD00D");
             });
 
             modelBuilder.Entity<Empleado>(entity =>
@@ -109,6 +121,12 @@ namespace Billder.Infrastructure.Data
                 entity.Property(e => e.Puesto)
                     .HasMaxLength(100)
                     .IsUnicode(false);
+
+                entity.HasOne(d => d.Usuario)
+                    .WithMany(p => p.Empleados)
+                    .HasForeignKey(d => d.UsuarioId)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
+                    .HasConstraintName("FK__Empleado__Usuari__45F365D3");
             });
 
             modelBuilder.Entity<Material>(entity =>
@@ -118,6 +136,12 @@ namespace Billder.Infrastructure.Data
                 entity.Property(e => e.Descripcion)
                     .HasMaxLength(255)
                     .IsUnicode(false);
+
+                entity.HasOne(d => d.Usuario)
+                    .WithMany(p => p.Materials)
+                    .HasForeignKey(d => d.UsuarioId)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
+                    .HasConstraintName("FK__Material__Usuari__571DF1D5");
             });
 
             modelBuilder.Entity<Pago>(entity =>
@@ -133,7 +157,13 @@ namespace Billder.Infrastructure.Data
                 entity.HasOne(d => d.Trabajo)
                     .WithMany(p => p.Pagos)
                     .HasForeignKey(d => d.TrabajoId)
-                    .HasConstraintName("FK__Pago__TrabajoId__4E88ABD4");
+                    .HasConstraintName("FK__Pago__TrabajoId__534D60F1");
+
+                entity.HasOne(d => d.Usuario)
+                    .WithMany(p => p.Pagos)
+                    .HasForeignKey(d => d.UsuarioId)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
+                    .HasConstraintName("FK__Pago__UsuarioId__5441852A");
             });
 
             modelBuilder.Entity<Presupuesto>(entity =>
@@ -141,6 +171,12 @@ namespace Billder.Infrastructure.Data
                 entity.ToTable("Presupuesto");
 
                 entity.Property(e => e.EstadoPresupuesto).HasMaxLength(50);
+
+                entity.HasOne(d => d.Usuario)
+                    .WithMany(p => p.Presupuestos)
+                    .HasForeignKey(d => d.UsuarioId)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
+                    .HasConstraintName("FK__Presupues__Usuar__4222D4EF");
             });
 
             modelBuilder.Entity<PresupuestoEmpleado>(entity =>
@@ -155,12 +191,18 @@ namespace Billder.Infrastructure.Data
                     .WithMany(p => p.PresupuestoEmpleados)
                     .HasForeignKey(d => d.EmpleadoId)
                     .OnDelete(DeleteBehavior.ClientSetNull)
-                    .HasConstraintName("FK__Presupues__Emple__5441852A");
+                    .HasConstraintName("FK__Presupues__Emple__5AEE82B9");
 
                 entity.HasOne(d => d.Presupuesto)
                     .WithMany(p => p.PresupuestoEmpleados)
                     .HasForeignKey(d => d.PresupuestoId)
-                    .HasConstraintName("FK__Presupues__Presu__534D60F1");
+                    .HasConstraintName("FK__Presupues__Presu__59FA5E80");
+
+                entity.HasOne(d => d.Usuario)
+                    .WithMany(p => p.PresupuestoEmpleados)
+                    .HasForeignKey(d => d.UsuarioId)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
+                    .HasConstraintName("FK__Presupues__Usuar__5BE2A6F2");
             });
 
             modelBuilder.Entity<PresupuestoMaterial>(entity =>
@@ -176,13 +218,19 @@ namespace Billder.Infrastructure.Data
                 entity.HasOne(d => d.Material)
                     .WithMany(p => p.PresupuestoMaterials)
                     .HasForeignKey(d => d.MaterialID)
-                    .HasConstraintName("FK__Presupues__Mater__5812160E");
+                    .HasConstraintName("FK__Presupues__Mater__5FB337D6");
 
                 entity.HasOne(d => d.Presupuesto)
                     .WithMany(p => p.PresupuestoMaterials)
                     .HasForeignKey(d => d.PresupuestoID)
                     .OnDelete(DeleteBehavior.Cascade)
-                    .HasConstraintName("FK__Presupues__Presu__571DF1D5");
+                    .HasConstraintName("FK__Presupues__Presu__5EBF139D");
+
+                entity.HasOne(d => d.Usuario)
+                    .WithMany(p => p.PresupuestoMaterials)
+                    .HasForeignKey(d => d.UsuarioId)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
+                    .HasConstraintName("FK__Presupues__Usuar__60A75C0F");
             });
 
             modelBuilder.Entity<Trabajo>(entity =>
@@ -204,22 +252,29 @@ namespace Billder.Infrastructure.Data
                 entity.HasOne(d => d.Cliente)
                     .WithMany(p => p.Trabajos)
                     .HasForeignKey(d => d.ClienteId)
-                    .HasConstraintName("FK__Trabajo__Cliente__46E78A0C");
+                    .HasConstraintName("FK__Trabajo__Cliente__49C3F6B7");
 
                 entity.HasOne(d => d.Presupuesto)
                     .WithMany(p => p.Trabajos)
                     .HasForeignKey(d => d.PresupuestoId)
-                    .HasConstraintName("FK__Trabajo__Presupu__47DBAE45");
+                    .OnDelete(DeleteBehavior.SetNull)
+                    .HasConstraintName("FK__Trabajo__Presupu__4AB81AF0");
+
+                entity.HasOne(d => d.Usuario)
+                    .WithMany(p => p.Trabajos)
+                    .HasForeignKey(d => d.UsuarioId)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
+                    .HasConstraintName("FK__Trabajo__Usuario__4BAC3F29");
             });
 
             modelBuilder.Entity<UsuarioRegistrado>(entity =>
             {
                 entity.ToTable("UsuarioRegistrado");
 
-                entity.HasIndex(e => e.NroIdentificacion, "UQ__UsuarioR__05462304DB54B046")
+                entity.HasIndex(e => e.NroIdentificacion, "UQ__UsuarioR__0546230441777584")
                     .IsUnique();
 
-                entity.HasIndex(e => e.Email, "UQ__UsuarioR__A9D1053417FF52DA")
+                entity.HasIndex(e => e.Email, "UQ__UsuarioR__A9D10534A85F105E")
                     .IsUnique();
 
                 entity.Property(e => e.Ciudad)
