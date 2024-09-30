@@ -2,11 +2,13 @@
 using Billder.Application.Interfaces;
 using Billder.Application.Services;
 using Billder.Infrastructure.Entities;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Billder.API.Controllers
 {
     [Route("api/[controller]")]
+    [Authorize]
     [ApiController]
     public class TrabajoController : ControllerBase
     {

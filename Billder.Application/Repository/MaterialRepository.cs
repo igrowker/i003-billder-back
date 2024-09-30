@@ -43,7 +43,8 @@ namespace Billder.Application.Repository
 
         public async Task<Material> GetMaterialById(int id)
         {
-            return await _context.Materials.FindAsync(id);
+            var result = await _context.Materials.FindAsync(id);
+            return result ?? null!;
         }
 
         public async Task<bool> UpdateMaterial(Material material)

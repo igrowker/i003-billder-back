@@ -3,8 +3,15 @@ using Billder.Application.Repository;
 using Billder.Application.Repository.Interfaces;
 using Billder.Application.Services;
 using Billder.Infrastructure.Data;
+using Billder.Application.Custom;
 using Microsoft.EntityFrameworkCore;
+using AspNetCoreRateLimit;
+using DotNetEnv;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.IdentityModel.Tokens;
+using System.Text;
 
+Env.Load();
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
@@ -14,6 +21,9 @@ builder.Services.AddScoped<TrabajoService>();
 
 builder.Services.AddScoped<IPresupuestoRepository, PresupuestoRepository>();
 builder.Services.AddScoped<IPresupuestoService, PresupuestoService>();
+
+builder.Services.AddScoped<IURegistradoRepository, URegistradoRepository>();
+builder.Services.AddScoped<IURegistradoInterface, UsuarioRegistradoService>();
 
 builder.Services.AddScoped<IMaterialRepository, MaterialRepository>();
 builder.Services.AddScoped<IMaterialService, MaterialService>();
@@ -31,10 +41,57 @@ builder.Services.AddControllers();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
+
+
+
+// in-memory cache is using to store rate limit counters
+builder.Services.AddMemoryCache();
+// carga la config de appsettings.json
+builder.Services.Configure<IpRateLimitOptions>(builder.Configuration.GetSection("IpRateLimiting"));
+// inject counter and rules stores
+builder.Services.AddSingleton<IRateLimitConfiguration, RateLimitConfiguration>();
+builder.Services.AddInMemoryRateLimiting();
+// the clientId/clientIp resolvers use IHttpContextAccessor.
+builder.Services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
+
+var connectionString = Environment.GetEnvironmentVariable("REMOTE_DB_CONNECTION_STRING");
+
 builder.Services.AddDbContext<AppDbContext>(options =>
-    options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
+    options.UseSqlServer(connectionString));
 builder.Services.AddScoped<TrabajoRepository>();
+builder.Services.AddSingleton<Utilidades>();
+
+builder.Services.AddAuthentication(config =>
+{
+    config.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+    config.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+}).AddJwtBearer(config =>
+{
+    config.RequireHttpsMetadata = false;
+    config.SaveToken = true;
+    config.TokenValidationParameters = new TokenValidationParameters
+    {
+        ValidateIssuerSigningKey = true,
+        ValidateIssuer = false,
+        ValidateAudience = false,
+        ValidateLifetime = true,
+        ClockSkew = TimeSpan.Zero,
+        IssuerSigningKey = new SymmetricSecurityKey
+        (Encoding.UTF8.GetBytes(builder.Configuration["Jwt:key"]!))
+    };
+});
+
+builder.Services.AddCors(options =>
+{
+    options.AddPolicy("NewPolicy", app =>
+    {
+        app.AllowAnyOrigin().AllowAnyHeader().AllowAnyMethod();
+    });
+});
 var app = builder.Build();
+
+// habilita AspNetCoreRateLimit Middleware
+app.UseIpRateLimiting();
 
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
@@ -45,6 +102,8 @@ if (app.Environment.IsDevelopment())
 
 app.UseHttpsRedirection();
 
+app.UseCors("NewPolicy");
+app.UseAuthentication();
 app.UseAuthorization();
 
 app.MapControllers();
