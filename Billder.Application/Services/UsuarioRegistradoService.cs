@@ -21,7 +21,7 @@ namespace Billder.Application.Services
         {
             if (string.IsNullOrWhiteSpace(usuario.Password))
                 throw new ArgumentException("Password is required", nameof(usuario.Password));
-            usuario.Password = _utilidades.encriptarSHA256(usuario.Password);           
+            //usuario.Password = _utilidades.encriptarSHA256(usuario.Password);           
             return await _uRegistradoRepository.CrearUsuarioRegistradoRepository(usuario);
         }
 

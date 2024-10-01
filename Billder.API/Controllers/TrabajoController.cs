@@ -4,7 +4,7 @@ using Billder.Application.Services;
 using Billder.Infrastructure.Entities;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-
+using Billder.Infrastructure.DTOs;
 namespace Billder.API.Controllers
 {
     [Route("api/[controller]")]
@@ -23,89 +23,76 @@ namespace Billder.API.Controllers
         public async Task<IActionResult> GetTrabajoByID(int id)
         {
             var trabajo = await _service.GetTrabajoByID(id);
-                if(trabajo == null)
+            if (trabajo == null)
             {
                 return NotFound();
             }
-                return Ok(trabajo);
+            return Ok(trabajo);
         }
 
         [HttpPost]
-        public async Task<IActionResult> CrearTrabajo([FromBody] Trabajo trabajo)
+        public async Task<IActionResult> CrearTrabajo([FromBody] TrabajoDTO trabajoDTO)
         {
-            if(trabajo == null)
+            if (trabajoDTO == null)
             {
                 return BadRequest("Trabajo no debe estar vacío");
             }
-            try
+            var objetoTrabajo = new Trabajo
             {
-                var trabajoCreado = await _service.CrearTrabajo(trabajo);
-                return CreatedAtAction(nameof(GetTrabajoByID), new { id = trabajoCreado.Id }, trabajoCreado);
-            }
-            catch(Exception ex)
-            {
-                _logger.LogError(ex, "Error al crear el trabajo");
-                return StatusCode(500, ex.Message);
-            }
+                Id = trabajoDTO.Id,
+                UsuarioId = trabajoDTO.UsuarioId,
+                Nombre = trabajoDTO.Nombre,
+                ClienteId = trabajoDTO.ClienteId,
+                PresupuestoId = trabajoDTO.PresupuestoId,
+                Descripcion = trabajoDTO.Descripcion,
+                Fecha = trabajoDTO.Fecha,
+                EstadoTrabajo = trabajoDTO.EstadoTrabajo
+            };
+
+            var trabajoCreado  = await _service.CrearTrabajo(objetoTrabajo);
+            return CreatedAtAction(nameof(GetTrabajoByID), new { id = trabajoCreado.Id }, trabajoCreado);
         }
+
         [HttpPut]
         public async Task<IActionResult> UpdateTrabajo(Trabajo trabajo)
         {
-            if(trabajo == null)
+            if (trabajo == null)
             {
                 return BadRequest("El trabajo no puede ser nulo");
             }
-            try
-            {
-                var trabajoEncontrado = await _service.UpdateTrabajo(trabajo);
-                return Ok(trabajoEncontrado);
-            }
-            catch(Exception ex)
-            {
-                _logger.LogError(ex, "Error al actualizar el trabajo");
-                return StatusCode(500, ex.Message);
-            }
+
+            var trabajoEncontrado = await _service.UpdateTrabajo(trabajo);
+            return Ok(trabajoEncontrado);
         }
+
         [HttpDelete]
         public async Task<IActionResult> DeleteTrabajo(int id)
         {
             var trabajoEncontrado = await _service.GetTrabajoByID(id);
-            if(trabajoEncontrado == null)
+            if (trabajoEncontrado == null)
             {
                 return NotFound("No se encontro un trabajo con ese ID");
             }
-            try
+            var trabajoBorrado = await _service.DeleteTrabajo(id);
+            if (trabajoBorrado == 0)
             {
-                var trabajoBorrado = await _service.DeleteTrabajo(id);
-                if(trabajoBorrado == 0)
-                {
-                    return NotFound("No se encontro un trabajo para eliminar");
-                }
-                return NoContent();
+                return NotFound("No se encontro un trabajo para eliminar");
             }
-            catch (Exception ex)
-            {
-                _logger.LogError(ex, "Error al borrar el trabajo");
-                return StatusCode(500, ex.Message);
-            }
+            return NoContent();
         }
         [HttpGet]
         public async Task<IActionResult> GetHistorialDeTrabajos(int clienteID, int numeroPagina)
         {
-            if(clienteID == 0)
+            if (clienteID == 0)
             {
                 return NotFound("No se pudo encontrar al cliente");
             }
-            try
-            {
-                var trabajos = await _service.GetHistorialDeTrabajos(clienteID,numeroPagina);
-                return Ok(trabajos);
-            }
-            catch (Exception ex)
-            {
-                _logger.LogError(ex, "Error al obtener el historial de trabajos");
-                return StatusCode(500, ex.Message);
-            }
+
+            var trabajos = await _service.GetHistorialDeTrabajos(clienteID, numeroPagina);
+            return Ok(trabajos);
         }
     }
 }
+
+        
+
