@@ -10,10 +10,16 @@ using DotNetEnv;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
 using System.Text;
+using Microsoft.OpenApi.Models;
 
 Env.Load();
 var builder = WebApplication.CreateBuilder(args);
 
+//manejador de excepciones centralizado
+builder.Services.AddControllers(options =>
+{
+    options.Filters.Add(typeof(ExceptionHandler)); 
+});
 // Add services to the container.
 builder.Services.AddScoped<ITrabajoRepository, TrabajoRepository>();
 builder.Services.AddScoped<ITrabajoInterface, TrabajoService>();
@@ -40,7 +46,34 @@ builder.Services.AddScoped<IPresupuestoMaterialService, PresupuestoMaterialServi
 builder.Services.AddControllers();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
-builder.Services.AddSwaggerGen();
+builder.Services.AddSwaggerGen(c =>
+{
+    c.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme
+    {
+        In = ParameterLocation.Header,
+        Description = "Please enter token in the format 'Bearer {token}'",
+        Name = "Authorization",
+        Type = SecuritySchemeType.ApiKey,
+        BearerFormat = "JWT",
+        Scheme = "Bearer"
+    });
+
+    c.AddSecurityRequirement(new OpenApiSecurityRequirement
+    {
+        {
+            new OpenApiSecurityScheme
+            {
+                Reference = new OpenApiReference
+                {
+                    Type = ReferenceType.SecurityScheme,
+                    Id = "Bearer"
+                }
+            },
+            Array.Empty<string>()
+        }
+    });
+});
+
 
 
 
@@ -54,7 +87,7 @@ builder.Services.AddInMemoryRateLimiting();
 // the clientId/clientIp resolvers use IHttpContextAccessor.
 builder.Services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
 
-var connectionString = Environment.GetEnvironmentVariable("REMOTE_DB_CONNECTION_STRING");
+var connectionString = Environment.GetEnvironmentVariable("LOCAL_DB_CONNECTION_STRING");
 
 builder.Services.AddDbContext<AppDbContext>(options =>
     options.UseSqlServer(connectionString));
