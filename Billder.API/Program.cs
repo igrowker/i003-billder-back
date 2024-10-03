@@ -18,7 +18,7 @@ var builder = WebApplication.CreateBuilder(args);
 //manejador de excepciones centralizado
 builder.Services.AddControllers(options =>
 {
-    options.Filters.Add(typeof(ExceptionHandler)); 
+    options.Filters.Add(typeof(ExceptionHandler));
 });
 // Add services to the container.
 builder.Services.AddScoped<ITrabajoRepository, TrabajoRepository>();
@@ -87,32 +87,19 @@ builder.Services.AddInMemoryRateLimiting();
 // the clientId/clientIp resolvers use IHttpContextAccessor.
 builder.Services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
 
-var connectionString = Environment.GetEnvironmentVariable("LOCAL_DB_CONNECTION_STRING");
+var connectionString = Environment.GetEnvironmentVariable("REMOTE_DB_CONNECTION_STRING");
+if (string.IsNullOrEmpty(connectionString))
+{
+    throw new InvalidOperationException("La cadena de conexión no está configurada. Asegúrate de que la variable de entorno esté definida.");
+}
 
 builder.Services.AddDbContext<AppDbContext>(options =>
     options.UseSqlServer(connectionString));
+
 builder.Services.AddScoped<TrabajoRepository>();
 builder.Services.AddSingleton<Utilidades>();
 
-builder.Services.AddAuthentication(config =>
-{
-    config.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
-    config.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
-}).AddJwtBearer(config =>
-{
-    config.RequireHttpsMetadata = false;
-    config.SaveToken = true;
-    config.TokenValidationParameters = new TokenValidationParameters
-    {
-        ValidateIssuerSigningKey = true,
-        ValidateIssuer = false,
-        ValidateAudience = false,
-        ValidateLifetime = true,
-        ClockSkew = TimeSpan.Zero,
-        IssuerSigningKey = new SymmetricSecurityKey
-        (Encoding.UTF8.GetBytes(builder.Configuration["Jwt:key"]!))
-    };
-});
+builder.Services.AddJwtAuthentication();
 
 builder.Services.AddCors(options =>
 {

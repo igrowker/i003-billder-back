@@ -7,7 +7,7 @@ namespace Billder.Application.Custom
     public class ExceptionHandler : IExceptionFilter
     {
         private readonly ILogger<ExceptionHandler> _logger;
-        public ExceptionHandler(ILogger<ExceptionHandler>logger)
+        public ExceptionHandler(ILogger<ExceptionHandler> logger)
         {
             _logger = logger;
         }

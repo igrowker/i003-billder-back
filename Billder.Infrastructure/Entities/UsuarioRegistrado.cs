@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Text.Json.Serialization;
 
 namespace Billder.Infrastructure.Entities
 {
@@ -30,15 +31,23 @@ namespace Billder.Infrastructure.Entities
         public string? Pais { get; set; }
         public string? Telefono { get; set; }
         public string Password { get; set; } = null!;
-
+        [JsonIgnore]
         public virtual ICollection<Cliente> Clientes { get; set; }
+        [JsonIgnore]
         public virtual ICollection<Contrato> Contratos { get; set; }
+        [JsonIgnore]
         public virtual ICollection<Empleado> Empleados { get; set; }
+        [JsonIgnore]
         public virtual ICollection<Material> Materials { get; set; }
+        [JsonIgnore]
         public virtual ICollection<Pago> Pagos { get; set; }
+        [JsonIgnore]
         public virtual ICollection<PresupuestoEmpleado> PresupuestoEmpleados { get; set; }
+        [JsonIgnore]
         public virtual ICollection<PresupuestoMaterial> PresupuestoMaterials { get; set; }
+        [JsonIgnore]
         public virtual ICollection<Presupuesto> Presupuestos { get; set; }
+        [JsonIgnore]
         public virtual ICollection<Trabajo> Trabajos { get; set; }
     }
 }

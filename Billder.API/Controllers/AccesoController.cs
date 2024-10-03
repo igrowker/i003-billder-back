@@ -33,9 +33,9 @@ namespace Billder.API.Controllers
                                     u.Password == _utilidades.encriptarSHA256(objeto.Password)
                                     ).FirstOrDefaultAsync();
 
-            if(usuarioEncontrado == null)
+            if (usuarioEncontrado == null)
             {
-                return StatusCode(StatusCodes.Status401Unauthorized, new { isSuccess = false, token = "" });
+                return StatusCode(StatusCodes.Status200OK, new { isSuccess = false, token = "" });
             }
             else
             {
