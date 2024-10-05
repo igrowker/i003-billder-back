@@ -20,7 +20,15 @@ FROM build AS publish
 ARG BUILD_CONFIGURATION=Release
 RUN dotnet publish "./Billder.API.csproj" -c $BUILD_CONFIGURATION -o /app/publish /p:UseAppHost=false
 
+# Asegúrate de que appsettings.json y appsettings.Development.json estén incluidos en la publicación
+COPY ["Billder.API/appsettings.json", "/app/publish/"]
+COPY ["Billder.API/appsettings.Development.json", "/app/publish/"]
+
 FROM base AS final
 WORKDIR /app
-COPY --from=publish /app/publish .
+
+# Configurar el entorno de desarrollo
+ENV ASPNETCORE_ENVIRONMENT=Development
+
+COPY --from=publish /app/publish . 
 ENTRYPOINT ["dotnet", "Billder.API.dll"]
