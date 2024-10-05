@@ -13,6 +13,6 @@ namespace Billder.Application.Repository.Interfaces
         Task<Trabajo> UpdateTrabajoRepository(Trabajo trabajo);
         Task<Trabajo> GetTrabajoByIDRepository(int id);
         Task<int> DeleteTrabajoRepository(int id);
-        Task<List<Trabajo>> GetHistorialDeTrabajosRepository(int clienteID, int numeroPagina);
+        Task<List<Trabajo>> GetHistorialDeTrabajosRepository(int usuarioID, int numeroPagina, string ordenamiento);
     }
 }

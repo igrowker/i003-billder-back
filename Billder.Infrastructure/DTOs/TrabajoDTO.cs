@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace Billder.Infrastructure.DTOs
 {
-    public class TrabajoDTO
+    public record TrabajoDTO
     {
         public int Id { get; set; }
         public int UsuarioId { get; set; }
