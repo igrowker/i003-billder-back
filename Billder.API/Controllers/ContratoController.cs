@@ -61,27 +61,27 @@ namespace Billder.API.Controllers
         [HttpDelete]
         public async Task<IActionResult> DeleteContrato(int id)
         {
-            var trabajoEncontrado = await _service.GetContratoByID(id);
-            if (trabajoEncontrado == null)
+            var contratoEncontrado = await _service.GetContratoByID(id);
+            if (contratoEncontrado == null)
             {
                 return NotFound("No se encontro un contrato con ese ID");
             }
-            var contratoBorrado = await _service.DeleteContrato(id);
-            if (contratoBorrado == 0)
-            {
-                return NotFound("No se encontro un contrato para eliminar");
-            }
+            await _service.DeleteContrato(id);
+
             return NoContent();
         }
         [HttpGet]
-        public async Task<IActionResult> GetHistorialDeContrato(int clienteID, int numeroPagina)
+        public async Task<IActionResult> GetHistorialDeContrato(int usuarioID, int numeroPagina)
         {
-            if (clienteID == 0)
+            if (usuarioID == 0)
             {
                 return NotFound("No se pudo encontrar al cliente");
             }
-
-            var contrato = await _service.GetHistorialDeContratos(clienteID, numeroPagina);
+            if(numeroPagina < 1)
+            {
+                return NotFound("Pagina invalida");
+            }
+            var contrato = await _service.GetHistorialDeContratos(usuarioID, numeroPagina);
             return Ok(contrato);
         }
     }

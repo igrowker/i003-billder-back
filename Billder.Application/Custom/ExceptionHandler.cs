@@ -1,6 +1,8 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Filters;
 using Microsoft.Extensions.Logging;
+using Microsoft.Data.SqlClient;
+using Microsoft.EntityFrameworkCore;
 
 namespace Billder.Application.Custom
 {
@@ -32,6 +34,37 @@ namespace Billder.Application.Custom
             else if (context.Exception is NotFoundObjectResult)
             {
                 context.Result = new NotFoundResult();
+                context.ExceptionHandled = true;
+            }
+            else if (context.Exception is DbUpdateException dbUpdateEx)
+            {
+                var message = "Error al actualizar la base de datos.";
+
+                if (dbUpdateEx.InnerException is SqlException sqlEx)
+                {
+                    switch (sqlEx.Number)
+                    {
+                        case 547: // caso violacion de FK
+                            message = "No se puede realizar la operación debido a restricciones de integridad referencial.";
+                            break;
+                        case 2601:
+                        case 2627: //caso violacion de unique constraint
+                            message = "Ya existe un registro con los mismos datos únicos.";
+                            break;
+                        default:
+                            message = "Error de base de datos.";
+                            break;
+                    }
+                }
+
+                context.Result = new ObjectResult(new
+                {
+                    Error = message,
+                    Details = context.Exception.Message
+                })
+                {
+                    StatusCode = 400
+                };
                 context.ExceptionHandled = true;
             }
             else

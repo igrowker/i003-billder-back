@@ -33,13 +33,13 @@ namespace Billder.API.Controllers
         [HttpPost]
         public async Task<IActionResult> CrearTrabajo([FromBody] TrabajoDTO trabajoDTO)
         {
+            //es obligatorio que haya un cliente para un trabajo
             if (trabajoDTO == null)
             {
                 return BadRequest("Trabajo no debe estar vacío");
             }
             var objetoTrabajo = new Trabajo
             {
-                Id = trabajoDTO.Id,
                 UsuarioId = trabajoDTO.UsuarioId,
                 Nombre = trabajoDTO.Nombre,
                 ClienteId = trabajoDTO.ClienteId,
@@ -54,14 +54,29 @@ namespace Billder.API.Controllers
         }
 
         [HttpPut]
-        public async Task<IActionResult> UpdateTrabajo(Trabajo trabajo)
+        public async Task<IActionResult> UpdateTrabajo(TrabajoDTO trabajoDTO)
         {
-            if (trabajo == null)
+            if (trabajoDTO == null)
             {
                 return BadRequest("El trabajo no puede ser nulo");
             }
-
-            var trabajoEncontrado = await _service.UpdateTrabajo(trabajo);
+            var trabajoExistente = await _service.GetTrabajoByID(trabajoDTO.Id);
+            if (trabajoExistente == null)
+            {
+                return NotFound($"Trabajo con ID {trabajoDTO.Id} no encontrado");
+            }
+            var objetoTrabajo = new Trabajo
+            {
+                Id = trabajoDTO.Id, //esto no se modifica, solo se usa para getByID
+                UsuarioId = trabajoDTO.UsuarioId,
+                Nombre = trabajoDTO.Nombre,
+                ClienteId = trabajoDTO.ClienteId,
+                PresupuestoId = trabajoDTO.PresupuestoId,
+                Descripcion = trabajoDTO.Descripcion,
+                Fecha = trabajoDTO.Fecha,
+                EstadoTrabajo = trabajoDTO.EstadoTrabajo
+            };
+            var trabajoEncontrado = await _service.UpdateTrabajo(objetoTrabajo);
             return Ok(trabajoEncontrado);
         }
 
@@ -81,14 +96,18 @@ namespace Billder.API.Controllers
             return NoContent();
         }
         [HttpGet]
-        public async Task<IActionResult> GetHistorialDeTrabajos(int clienteID, int numeroPagina)
+        public async Task<IActionResult> GetHistorialDeTrabajos(int usuarioID, int numeroPagina, string ordenamiento)
         {
-            if (clienteID == 0)
+            if (usuarioID <= 0)
             {
-                return NotFound("No se pudo encontrar al cliente");
+                return NotFound("No se pudo encontrar al usuario");
+            }
+            if(ordenamiento != "ASC" && ordenamiento != "DESC") //solo acepta uno a la vez, y debe coincidir con esos valores
+            {
+                return BadRequest("El ordenamiento es invalido");
             }
 
-            var trabajos = await _service.GetHistorialDeTrabajos(clienteID, numeroPagina);
+            var trabajos = await _service.GetHistorialDeTrabajos(usuarioID, numeroPagina, ordenamiento);
             return Ok(trabajos);
         }
     }

@@ -13,6 +13,6 @@ namespace Billder.Application.Repository.Interfaces
         Task<Contrato> GetContratoByID(int id);
         Task<int> DeleteContrato(int id);
         Task<Contrato> UpdateContrato(Contrato contrato);
-        Task<List<Contrato>> GetHistorialDeContratos(int clienteID, int numeroPagina);
+        Task<List<Contrato>> GetHistorialDeContratos(int usuarioID, int numeroPagina);
     }
 }

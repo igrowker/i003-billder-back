@@ -34,9 +34,9 @@ namespace Billder.Application.Services
         {
             return await _contratoRepository.UpdateContratoRepository(contrato);
         }
-        public async Task<List<Contrato>> GetHistorialDeContratos(int clienteID, int numeroPagina)
+        public async Task<List<Contrato>> GetHistorialDeContratos(int usuarioID, int numeroPagina)
         {
-            return await _contratoRepository.GetHistorialDeContratosRepository(clienteID, numeroPagina);
+            return await _contratoRepository.GetHistorialDeContratosRepository(usuarioID, numeroPagina);
         }
     }
 }
