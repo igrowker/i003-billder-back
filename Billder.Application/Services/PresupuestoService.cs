@@ -22,24 +22,24 @@ namespace Billder.Application.Services
             return await _presupuestoRepository.CreatePresupuesto(presupuesto);
         }
 
-        public async Task<bool> DeletePresupuestoByIdAsync(int id)
+        public async Task<bool> DeletePresupuestoByIdAsync(int id, int userId)
         {
-            return await _presupuestoRepository.DeletePresupuestoById(id);
+            return await _presupuestoRepository.DeletePresupuestoById(id, userId);
         }
 
-        public async Task<IEnumerable<Presupuesto>> GetAllPresupuestosAsync()
+        public async Task<IEnumerable<Presupuesto>> GetAllPresupuestosAsync(int userId)
         {
-            return await _presupuestoRepository.GetAllPresupuesto();
+            return await _presupuestoRepository.GetAllPresupuesto(userId);
         }
 
-        public async Task<Presupuesto> GetPresupuestoByIdAsync(int id)
+        public async Task<Presupuesto> GetPresupuestoByIdAsync(int id, int userId)
         {
-            return await _presupuestoRepository.GetPresupuestoById(id);
+            return await _presupuestoRepository.GetPresupuestoById(id, userId);
         }
 
-        public async Task<bool> UpdatePresupuestoAsync(Presupuesto presupuesto)
+        public async Task<bool> UpdatePresupuestoAsync(Presupuesto presupuesto, int userId)
         {
-            return await _presupuestoRepository.UpdatePresupuesto(presupuesto);
+            return await _presupuestoRepository.UpdatePresupuesto(presupuesto, userId);
         }
     }
 }

@@ -6,6 +6,8 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Billder.Application.Custom;
 using Billder.Infrastructure.DTOs;
+using Microsoft.EntityFrameworkCore;
+using System.Security.Claims;
 namespace Billder.API.Controllers
 {
     [Route("api/[controller]")]
@@ -133,6 +135,35 @@ namespace Billder.API.Controllers
             {
                 _logger.LogError(ex, "Error al obtener los usuarios registrados");
                 return StatusCode(500, ex.Message);
+            }
+        }
+        [HttpPost("CambiarContraseña")]
+        [Authorize]
+        public async Task<IActionResult> CambiarContraseña([FromBody] ChangePasswordDTO dto)
+        {
+            var userIdClaim = User.FindFirst(ClaimTypes.NameIdentifier);
+
+            if (userIdClaim == null)
+            {
+                return Unauthorized("Token inválido o no se ha proporcionado un ID de usuario.");
+            }
+
+            var userId = int.Parse(userIdClaim.Value);
+
+            var usuario = await _service.GetUsuarioRegistradoByID(userId);
+
+            if (usuario == null)
+            {
+                return NotFound("Usuario no encontrado");
+            }
+            try
+            {
+                await _service.UpdatePasword(usuario, dto);
+                return Ok("Contraseña cambiada exitosamente");
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, "Ocurrió un error al cambiar la contraseña.");
             }
         }
     }

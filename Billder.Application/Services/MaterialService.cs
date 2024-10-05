@@ -21,24 +21,24 @@ namespace Billder.Application.Services
             return await _materialRepository.CreateMaterial(material);
         }
 
-        public async Task<bool> DeleteMaterialByIdAsync(int id)
+        public async Task<bool> DeleteMaterialByIdAsync(int id, int userId)
         {
-            return await _materialRepository.DeleteMaterialById(id);
+            return await _materialRepository.DeleteMaterialById(id, userId);
         }
 
-        public async Task<IEnumerable<Material>> GetAllMaterialAsync()
+        public async Task<IEnumerable<Material>> GetAllMaterialAsync(int userId)
         {
-            return await _materialRepository.GetAllMaterial();
+            return await _materialRepository.GetAllMaterial(userId);
         }
 
-        public async Task<Material> GetMaterialByIdAsync(int id)
+        public async Task<Material> GetMaterialByIdAsync(int id, int userId)
         {
-            return await _materialRepository.GetMaterialById(id);
+            return await _materialRepository.GetMaterialById(id, userId);
         }
 
-        public async Task<bool> UpdateMaterialAsync(Material material)
+        public async Task<bool> UpdateMaterialAsync(Material material, int userId)
         {
-            return await _materialRepository.UpdateMaterial(material);
+            return await _materialRepository.UpdateMaterial(material, userId);
         }
     }
 }

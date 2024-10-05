@@ -75,7 +75,7 @@ namespace Billder.Application.Repository
             }
         }
 
-        public async Task<UsuarioRegistrado> UpdateUsuarioRegistradoRepository(UsuarioRegistrado usuario)
+        public async Task<bool> UpdateUsuarioRegistradoRepository(UsuarioRegistrado usuario)
         {
             try
             {
@@ -83,7 +83,7 @@ namespace Billder.Application.Repository
 
                 if (objetoUsuario == null)
                 {
-                    return null;
+                    return false;
                 }
                 objetoUsuario.FullName = usuario.FullName;
                 objetoUsuario.Email = usuario.Email;
@@ -97,7 +97,7 @@ namespace Billder.Application.Repository
                 objetoUsuario.Telefono = usuario.Telefono;
                 objetoUsuario.Password = usuario.Password;
                 await _context.SaveChangesAsync();
-                return objetoUsuario;
+                return true;
             }
             catch (Exception ex)
             {

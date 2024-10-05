@@ -9,10 +9,10 @@ namespace Billder.Application.Repository.Interfaces
 {
     public interface IMaterialRepository
     {
-        Task<IEnumerable<Material>> GetAllMaterial();
-        Task<Material> GetMaterialById(int id);
+        Task<IEnumerable<Material>> GetAllMaterial(int userId);
+        Task<Material> GetMaterialById(int id, int userId);
         Task<Material> CreateMaterial(Material material);
-        Task<bool> UpdateMaterial(Material material);
-        Task<bool> DeleteMaterialById(int id);
+        Task<bool> UpdateMaterial(Material material, int userId);
+        Task<bool> DeleteMaterialById(int id, int userId);
     }
 }

@@ -18,14 +18,14 @@ namespace Billder.Application.Repository
             _context = context;
         }
 
-        public async Task<IEnumerable<Empleado>> GetEmpleados()
+        public async Task<IEnumerable<Empleado>> GetEmpleados(int userId)
         {
-            return await _context.Empleados.ToListAsync();
+            return await _context.Empleados.Where(e => e.UsuarioId == userId).ToListAsync();
         }
 
-        public async Task<Empleado> GetEmpleadoById(int id)
+        public async Task<Empleado> GetEmpleadoById(int id, int userId)
         {
-            var result = await _context.Empleados.FindAsync(id);
+            var result = await _context.Empleados.FirstOrDefaultAsync(e => e.UsuarioId == userId && e.Id == id);
             return result ?? null!;
         }
 
@@ -36,9 +36,9 @@ namespace Billder.Application.Repository
             return empleado;
         }
 
-        public async Task<bool> UpdateEmpleado(Empleado empleado)
+        public async Task<bool> UpdateEmpleado(Empleado empleado, int userId)
         {
-            var existingEmpleado = await _context.Empleados.FindAsync(empleado.Id);
+            var existingEmpleado = await _context.Empleados.FirstOrDefaultAsync(e => e.UsuarioId == userId && e.Id == empleado.Id);
             if (existingEmpleado == null)
             {
                 return false;
@@ -52,9 +52,9 @@ namespace Billder.Application.Repository
             return true;
         }
 
-        public async Task<bool> DeleteEmpleadoById(int id)
+        public async Task<bool> DeleteEmpleadoById(int id, int userId)
         {
-            var material = await _context.Empleados.FindAsync(id);
+            var material = await _context.Empleados.FirstOrDefaultAsync(e => e.UsuarioId == userId && e.Id == id);
             if (material == null)
             {
                 return false;

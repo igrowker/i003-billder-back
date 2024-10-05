@@ -9,10 +9,10 @@ namespace Billder.Application.Interfaces
 {
     public interface IEmpleadoService
     {
-        Task<IEnumerable<Empleado>> GetAllEmpleadoAsync();
-        Task<Empleado> GetEmpleadoByIdAsync(int id);
+        Task<IEnumerable<Empleado>> GetAllEmpleadoAsync(int userId);
+        Task<Empleado> GetEmpleadoByIdAsync(int id, int userId);
         Task<Empleado> CreateEmpleadoAsync(Empleado material);
-        Task<bool> UpdateEmpleadoAsync(Empleado material);
-        Task<bool> DeleteEmpleadoByIdAsync(int id);
+        Task<bool> UpdateEmpleadoAsync(Empleado material, int userId);
+        Task<bool> DeleteEmpleadoByIdAsync(int id, int userId);
     }
 }

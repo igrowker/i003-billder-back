@@ -9,10 +9,10 @@ namespace Billder.Application.Interfaces
 {
     public interface IMaterialService
     {
-        Task<IEnumerable<Material>> GetAllMaterialAsync();
-        Task<Material> GetMaterialByIdAsync(int id);
+        Task<IEnumerable<Material>> GetAllMaterialAsync(int userId);
+        Task<Material> GetMaterialByIdAsync(int id, int userId);
         Task<Material> CreateMaterialAsync(Material material);
-        Task<bool> UpdateMaterialAsync(Material material);
-        Task<bool> DeleteMaterialByIdAsync(int id);
+        Task<bool> UpdateMaterialAsync(Material material, int userId);
+        Task<bool> DeleteMaterialByIdAsync(int id, int userId);
     }
 }
