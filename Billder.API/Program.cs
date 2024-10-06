@@ -25,6 +25,10 @@ builder.Services.AddScoped<ITrabajoRepository, TrabajoRepository>();
 builder.Services.AddScoped<ITrabajoInterface, TrabajoService>();
 builder.Services.AddScoped<TrabajoService>();
 
+builder.Services.AddScoped<IClienteRepository, ClienteRepository>();
+builder.Services.AddScoped<IClienteService, ClienteService>();
+builder.Services.AddScoped<ClienteService>();
+
 builder.Services.AddScoped<IPresupuestoRepository, PresupuestoRepository>();
 builder.Services.AddScoped<IPresupuestoService, PresupuestoService>();
 
@@ -90,7 +94,7 @@ builder.Services.AddInMemoryRateLimiting();
 // the clientId/clientIp resolvers use IHttpContextAccessor.
 builder.Services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
 
-var connectionString = Environment.GetEnvironmentVariable("REMOTE_DB_CONNECTION_STRING");
+var connectionString = Environment.GetEnvironmentVariable("LOCAL_DB_CONNECTION_STRING");
 if (string.IsNullOrEmpty(connectionString))
 {
     throw new InvalidOperationException("La cadena de conexión no está configurada. Asegúrate de que la variable de entorno esté definida.");

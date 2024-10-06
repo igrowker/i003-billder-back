@@ -29,10 +29,6 @@ namespace Billder.Application.Repository
         {
             var objetoTrabajo = await _context.Trabajos.FindAsync(trabajoRecibido.Id);
 
-            if (objetoTrabajo == null)
-            {
-                return null;
-            }
             objetoTrabajo.Nombre = trabajoRecibido.Nombre;
             objetoTrabajo.Descripcion = trabajoRecibido.Descripcion;
             objetoTrabajo.Fecha = trabajoRecibido.Fecha;

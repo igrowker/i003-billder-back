@@ -13,10 +13,14 @@ namespace Billder.API.Controllers
     public class TrabajoController : ControllerBase
     {
         private readonly ITrabajoInterface _service;
+        private readonly IClienteService _clienteService;
+        private readonly IURegistradoInterface _uRegistradoService;
         private readonly ILogger<TrabajoController> _logger;
-        public TrabajoController(TrabajoService service, ILogger<TrabajoController> logger)
+        public TrabajoController(ITrabajoInterface service, IClienteService clienteService, IURegistradoInterface uRegistradoService, ILogger<TrabajoController> logger)
         {
             _service = service;
+            _clienteService = clienteService;
+            _uRegistradoService = uRegistradoService;
             _logger = logger;
         }
         [HttpGet("{id}")]
@@ -31,26 +35,45 @@ namespace Billder.API.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> CrearTrabajo([FromBody] TrabajoDTO trabajoDTO)
+        public async Task<IActionResult> CrearTrabajo([FromBody] TrabajoClienteDTO request)
         {
+            _logger.LogInformation("Received request: {Request}", request);
+
             //es obligatorio que haya un cliente para un trabajo
-            if (trabajoDTO == null)
+            if (request.Trabajo == null)
             {
-                return BadRequest("Trabajo no debe estar vacío");
+                return BadRequest("Campo Trabajo no debe estar vacío");
+            }
+            if (request.Cliente == null)
+            {
+                return BadRequest("Campo Cliente no debe estar vacío");
+            }
+            var usuarioCorrecto = await _uRegistradoService.GetUsuarioRegistradoByID(request.Cliente.UsuarioId);
+            if (usuarioCorrecto == null)
+            {
+                return NotFound($"El usuario con ID {request.Cliente.UsuarioId} no existe.");
+            }
+
+            var clienteCreado = await _clienteService.CrearCliente(request.Cliente); //primero cliente, luego trabajo
+            if (clienteCreado == null)
+            {
+                return BadRequest("No se pudo crear el cliente");
             }
             var objetoTrabajo = new Trabajo
             {
-                UsuarioId = trabajoDTO.UsuarioId,
-                Nombre = trabajoDTO.Nombre,
-                ClienteId = trabajoDTO.ClienteId,
-                PresupuestoId = trabajoDTO.PresupuestoId,
-                Descripcion = trabajoDTO.Descripcion,
-                Fecha = trabajoDTO.Fecha,
-                EstadoTrabajo = trabajoDTO.EstadoTrabajo
+                UsuarioId = request.Trabajo.UsuarioId,
+                Nombre = request.Trabajo.Nombre,
+                ClienteId = clienteCreado.Id,
+                PresupuestoId = request.Trabajo.PresupuestoId,
+                Descripcion = request.Trabajo.Descripcion,
+                Fecha = request.Trabajo.Fecha,
+                EstadoTrabajo = request.Trabajo.EstadoTrabajo
             };
+
 
             var trabajoCreado  = await _service.CrearTrabajo(objetoTrabajo);
             return CreatedAtAction(nameof(GetTrabajoByID), new { id = trabajoCreado.Id }, trabajoCreado);
+           
         }
 
         [HttpPut]
