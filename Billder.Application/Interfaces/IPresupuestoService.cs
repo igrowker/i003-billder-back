@@ -9,10 +9,10 @@ namespace Billder.Application.Interfaces
 {
     public interface IPresupuestoService
     {
-        Task<IEnumerable<Presupuesto>> GetAllPresupuestosAsync();
-        Task<Presupuesto> GetPresupuestoByIdAsync(int id);
+        Task<IEnumerable<Presupuesto>> GetAllPresupuestosAsync(int userId);
+        Task<Presupuesto> GetPresupuestoByIdAsync(int id, int userId);
         Task<Presupuesto> CreatePresupuestoAsync(Presupuesto presupuesto);
-        Task<bool> UpdatePresupuestoAsync(Presupuesto presupuesto);
-        Task<bool> DeletePresupuestoByIdAsync(int id);
+        Task<bool> UpdatePresupuestoAsync(Presupuesto presupuesto, int userId);
+        Task<bool> DeletePresupuestoByIdAsync(int id, int userId);
     }
 }

@@ -25,9 +25,9 @@ namespace Billder.Application.Repository
 
         }
 
-        public async Task<bool> DeletePresupuestoEmpleadoById(int id)
+        public async Task<bool> DeletePresupuestoEmpleadoById(int id, int userId)
         {
-            var presupuestoEmpleado = await _context.PresupuestoEmpleados.FindAsync(id);
+            var presupuestoEmpleado = await _context.PresupuestoEmpleados.FirstOrDefaultAsync(pe => pe.UsuarioId == userId && pe.Id == id);
             if(presupuestoEmpleado == null)
             {
                 return false;
@@ -38,20 +38,20 @@ namespace Billder.Application.Repository
             return true;
         }
 
-        public async Task<IEnumerable<PresupuestoEmpleado>> GetAllPresupuesto()
+        public async Task<IEnumerable<PresupuestoEmpleado>> GetAllPresupuesto(int userId)
         {
-            return await _context.PresupuestoEmpleados.ToListAsync();
+            return await _context.PresupuestoEmpleados.Where(pe => pe.UsuarioId == userId).ToListAsync();
         }
 
-        public async Task<PresupuestoEmpleado> GetPresupuestoEmpleadoById(int id)
+        public async Task<PresupuestoEmpleado> GetPresupuestoEmpleadoById(int id, int userId)
         {
-            var result = await _context.PresupuestoEmpleados.FindAsync(id);
+            var result = await _context.PresupuestoEmpleados.FirstOrDefaultAsync(pe => pe.UsuarioId == userId && pe.Id == id);
             return result ?? null!;
         }
 
-        public async Task<bool> UpdatePresupuestoEmpleado(PresupuestoEmpleado presupuestoEmpleado)
+        public async Task<bool> UpdatePresupuestoEmpleado(PresupuestoEmpleado presupuestoEmpleado, int userId)
         {
-            var existingPresupuestoEmpleado = await _context.PresupuestoEmpleados.FindAsync(presupuestoEmpleado.Id);
+            var existingPresupuestoEmpleado = await _context.PresupuestoEmpleados.FirstOrDefaultAsync(pe => pe.UsuarioId == userId && pe.Id == presupuestoEmpleado.Id);
 
             if (existingPresupuestoEmpleado == null)
             {
@@ -63,7 +63,6 @@ namespace Billder.Application.Repository
             existingPresupuestoEmpleado.HorasTrabajadas = presupuestoEmpleado.HorasTrabajadas;
             existingPresupuestoEmpleado.CostoHora = presupuestoEmpleado.CostoHora;
 
-            _context.PresupuestoEmpleados.Update(presupuestoEmpleado);
             await _context.SaveChangesAsync();
             return true;
 

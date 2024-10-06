@@ -21,24 +21,24 @@ namespace Billder.Application.Services
             return await _presupuestoEmpleadoRepository.CreatePresupuestoEmpleado(presupuestoEmpleado);
         }
 
-        public async Task<bool> DeletePresupuestoEmpleadoByIdAsync(int id)
+        public async Task<bool> DeletePresupuestoEmpleadoByIdAsync(int id, int userId)
         {
-            return await _presupuestoEmpleadoRepository.DeletePresupuestoEmpleadoById(id);
+            return await _presupuestoEmpleadoRepository.DeletePresupuestoEmpleadoById(id, userId);
         }
 
-        public async Task<IEnumerable<PresupuestoEmpleado>> GetAllPresupuestoEmpleadoAsync()
+        public async Task<IEnumerable<PresupuestoEmpleado>> GetAllPresupuestoEmpleadoAsync(int userId)
         {
-            return await _presupuestoEmpleadoRepository.GetAllPresupuesto();
+            return await _presupuestoEmpleadoRepository.GetAllPresupuesto(userId);
         }
 
-        public async Task<PresupuestoEmpleado> GetPresupuestoEmpleadoByIdAsync(int id)
+        public async Task<PresupuestoEmpleado> GetPresupuestoEmpleadoByIdAsync(int id, int userId)
         {
-            return await _presupuestoEmpleadoRepository.GetPresupuestoEmpleadoById(id);
+            return await _presupuestoEmpleadoRepository.GetPresupuestoEmpleadoById(id, userId);
         }
 
-        public async Task<bool> UpdatePresupuestoEmpleadoAsync(PresupuestoEmpleado presupuestoEmpleado)
+        public async Task<bool> UpdatePresupuestoEmpleadoAsync(PresupuestoEmpleado presupuestoEmpleado, int userId)
         {
-            return await _presupuestoEmpleadoRepository.UpdatePresupuestoEmpleado(presupuestoEmpleado);
+            return await _presupuestoEmpleadoRepository.UpdatePresupuestoEmpleado(presupuestoEmpleado, userId);
         }
     }
 }

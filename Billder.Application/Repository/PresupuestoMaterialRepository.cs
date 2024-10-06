@@ -24,9 +24,9 @@ namespace Billder.Application.Repository
             return presupuestoMaterial;
         }
 
-        public async Task<bool> DeletePresupuestoMaterialById(int id)
+        public async Task<bool> DeletePresupuestoMaterialById(int id, int userId)
         {
-            var presupuestoMaterial = await _context.PresupuestoMaterials.FindAsync(id);
+            var presupuestoMaterial = await _context.PresupuestoMaterials.FirstOrDefaultAsync(pm => pm.UsuarioId == userId && pm.Id == id);
             if (presupuestoMaterial == null)
             {
                 return false;
@@ -36,21 +36,21 @@ namespace Billder.Application.Repository
             return true;
         }
 
-        public async Task<IEnumerable<PresupuestoMaterial>> GetAllPresupuestoMaterial()
+        public async Task<IEnumerable<PresupuestoMaterial>> GetAllPresupuestoMaterial(int userId)
         {
-            return await _context.PresupuestoMaterials.ToListAsync();
+            return await _context.PresupuestoMaterials.Where(pm => pm.UsuarioId == userId).ToListAsync();
         }
 
-        public async Task<PresupuestoMaterial> GetPresupuestoMaterialById(int id)
+        public async Task<PresupuestoMaterial> GetPresupuestoMaterialById(int id, int userId)
         {
-            var result = await _context.PresupuestoMaterials.FindAsync(id);
+            var result = await _context.PresupuestoMaterials.FirstOrDefaultAsync(pm => pm.UsuarioId == userId && pm.Id == id);
             return result ?? null!;
         }
 
-        public async Task<bool> UpdatePresupuestoMaterial(PresupuestoMaterial presupuestoMaterial)
+        public async Task<bool> UpdatePresupuestoMaterial(PresupuestoMaterial presupuestoMaterial, int userId)
         {
-            var existingPresupuestoMaterial = await _context.PresupuestoMaterials.FindAsync(presupuestoMaterial.Id);
-            if(existingPresupuestoMaterial == null)
+            var existingPresupuestoMaterial = await _context.PresupuestoMaterials.FirstOrDefaultAsync(pm => pm.UsuarioId == userId && pm.Id == presupuestoMaterial.Id);
+            if (existingPresupuestoMaterial == null)
             {
 
             return false; 
@@ -61,7 +61,6 @@ namespace Billder.Application.Repository
             existingPresupuestoMaterial.Costo = presupuestoMaterial.Costo;
             existingPresupuestoMaterial.Observacion = presupuestoMaterial.Observacion;
 
-            _context.PresupuestoMaterials.Update(existingPresupuestoMaterial);
             await _context.SaveChangesAsync();
             return true;
         }

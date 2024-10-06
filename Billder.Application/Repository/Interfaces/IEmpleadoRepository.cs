@@ -9,10 +9,10 @@ namespace Billder.Application.Repository.Interfaces
 {
     public interface IEmpleadoRepository
     {
-        Task<IEnumerable<Empleado>> GetEmpleados();
-        Task<Empleado> GetEmpleadoById(int id);
+        Task<IEnumerable<Empleado>> GetEmpleados(int userId);
+        Task<Empleado> GetEmpleadoById(int id, int userId);
         Task<Empleado> CreateEmpleado(Empleado empleado);
-        Task<bool> UpdateEmpleado (Empleado empleado);
-        Task<bool> DeleteEmpleadoById (int id);
+        Task<bool> UpdateEmpleado (Empleado empleado, int userId);
+        Task<bool> DeleteEmpleadoById (int id, int userId);
     }
 }

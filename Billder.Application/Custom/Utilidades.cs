@@ -46,7 +46,7 @@ namespace Billder.Application.Custom
             }
             var userClaims = new[]
             {
-                new Claim(ClaimTypes.NameIdentifier, usuario.FullName.ToString()),
+                new Claim(ClaimTypes.NameIdentifier, usuario.Id.ToString()),
                 new Claim(ClaimTypes.Email, usuario.Email!),
             };
             var securityKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(jwtKey));

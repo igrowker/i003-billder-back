@@ -9,11 +9,11 @@ namespace Billder.Application.Repository.Interfaces
 {
     public interface IPresupuestoRepository
     {
-        Task<IEnumerable<Presupuesto>> GetAllPresupuesto();
-        Task<Presupuesto> GetPresupuestoById(int id);
+        Task<IEnumerable<Presupuesto>> GetAllPresupuesto(int userId);
+        Task<Presupuesto> GetPresupuestoById(int id, int userId);
         Task<Presupuesto> CreatePresupuesto(Presupuesto presupuesto);
-        Task<bool> UpdatePresupuesto(Presupuesto presupuesto);
-        Task<bool> DeletePresupuestoById(int id);
+        Task<bool> UpdatePresupuesto(Presupuesto presupuesto, int userId);
+        Task<bool> DeletePresupuestoById(int id, int userId);
 
     }
 }

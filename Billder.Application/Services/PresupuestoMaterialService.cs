@@ -22,24 +22,24 @@ namespace Billder.Application.Services
             return await _presupuestoMaterialRepository.CreatePresupuestoMaterial(presupuestoMaterial);
         }
 
-        public async Task<bool> DeletePresupuestoMaterialByIdAsync(int id)
+        public async Task<bool> DeletePresupuestoMaterialByIdAsync(int id, int userId)
         {
-            return await _presupuestoMaterialRepository.DeletePresupuestoMaterialById(id);
+            return await _presupuestoMaterialRepository.DeletePresupuestoMaterialById(id, userId);
         }
 
-        public async Task<IEnumerable<PresupuestoMaterial>> GetAllPresupuestoMaterialAsync()
+        public async Task<IEnumerable<PresupuestoMaterial>> GetAllPresupuestoMaterialAsync(int userId)
         {
-            return await _presupuestoMaterialRepository.GetAllPresupuestoMaterial();
+            return await _presupuestoMaterialRepository.GetAllPresupuestoMaterial(userId);
         }
 
-        public async Task<PresupuestoMaterial> GetPresupuestoMaterialByIdAsync(int id)
+        public async Task<PresupuestoMaterial> GetPresupuestoMaterialByIdAsync(int id, int userId)
         {
-            return await _presupuestoMaterialRepository.GetPresupuestoMaterialById(id);
+            return await _presupuestoMaterialRepository.GetPresupuestoMaterialById(id, userId);
         }
 
-        public async Task<bool> UpdatePresupuestoMaterialAsync(PresupuestoMaterial presupuestoMaterial)
+        public async Task<bool> UpdatePresupuestoMaterialAsync(PresupuestoMaterial presupuestoMaterial, int userId)
         {
-            return await _presupuestoMaterialRepository.UpdatePresupuestoMaterial(presupuestoMaterial);
+            return await _presupuestoMaterialRepository.UpdatePresupuestoMaterial(presupuestoMaterial, userId);
         }
     }
 }

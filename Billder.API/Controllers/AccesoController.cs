@@ -35,7 +35,7 @@ namespace Billder.API.Controllers
 
             if (usuarioEncontrado == null)
             {
-                return StatusCode(StatusCodes.Status200OK, new { isSuccess = false, token = "" });
+                return StatusCode(StatusCodes.Status400BadRequest, new { isSuccess = false, token = "" });
             }
             else
             {

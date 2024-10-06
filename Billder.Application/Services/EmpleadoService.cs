@@ -22,24 +22,24 @@ namespace Billder.Application.Services
             return await _empleadoRepository.CreateEmpleado(material);
         }
 
-        public async Task<bool> DeleteEmpleadoByIdAsync(int id)
+        public async Task<bool> DeleteEmpleadoByIdAsync(int id, int userId)
         {
-            return await _empleadoRepository.DeleteEmpleadoById(id);
+            return await _empleadoRepository.DeleteEmpleadoById(id, userId);
         }
 
-        public async Task<IEnumerable<Empleado>> GetAllEmpleadoAsync()
+        public async Task<IEnumerable<Empleado>> GetAllEmpleadoAsync(int userId)
         {
-            return await _empleadoRepository.GetEmpleados();
+            return await _empleadoRepository.GetEmpleados(userId);
         }
 
-        public async Task<Empleado> GetEmpleadoByIdAsync(int id)
+        public async Task<Empleado> GetEmpleadoByIdAsync(int id, int userId)
         {
-            return await _empleadoRepository.GetEmpleadoById(id);
+            return await _empleadoRepository.GetEmpleadoById(id, userId);
         }
 
-        public async Task<bool> UpdateEmpleadoAsync(Empleado material)
+        public async Task<bool> UpdateEmpleadoAsync(Empleado material, int userId)
         {
-            return await _empleadoRepository.UpdateEmpleado(material);
+            return await _empleadoRepository.UpdateEmpleado(material, userId);
         }
     }
 }

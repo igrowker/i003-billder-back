@@ -24,9 +24,9 @@ namespace Billder.Application.Repository
             return material;
         }
 
-        public async Task<bool> DeleteMaterialById(int id)
+        public async Task<bool> DeleteMaterialById(int id, int userId)
         {
-            var material = await _context.Materials.FindAsync(id);
+            var material = await _context.Materials.FirstOrDefaultAsync(m => m.UsuarioId == userId && m.Id == id);
             if (material == null)
             {
                 return false;
@@ -36,20 +36,20 @@ namespace Billder.Application.Repository
             return true;
         }
 
-        public async Task<IEnumerable<Material>> GetAllMaterial()
+        public async Task<IEnumerable<Material>> GetAllMaterial(int userId)
         {
-            return await _context.Materials.ToListAsync();
+            return await _context.Materials.Where(m => m.UsuarioId == userId).ToListAsync();
         }
 
-        public async Task<Material> GetMaterialById(int id)
+        public async Task<Material> GetMaterialById(int id, int userId)
         {
             var result = await _context.Materials.FindAsync(id);
             return result ?? null!;
         }
 
-        public async Task<bool> UpdateMaterial(Material material)
+        public async Task<bool> UpdateMaterial(Material material, int userId)
         {
-            var existingMaterial = await _context.Materials.FindAsync(material.Id);
+            var existingMaterial = await _context.Materials.FirstOrDefaultAsync(m => m.UsuarioId == userId && m.Id == material.Id);
             if (existingMaterial == null)
             {
                 return false;

@@ -14,6 +14,6 @@ namespace Billder.Application.Repository.Interfaces
         Task<Contrato> GetContratoByIDRepository(int id);
         Task<int> DeleteContratoRepository(int id);
         Task<Contrato> UpdateContratoRepository(Contrato contrato);
-        Task<List<Contrato>> GetHistorialDeContratosRepository(int clienteID, int numeroPagina);
+        Task<List<Contrato>> GetHistorialDeContratosRepository(int usuarioID, int numeroPagina);
     }
 }

@@ -1,6 +1,7 @@
 ﻿using Billder.Application.Custom;
 using Billder.Application.Interfaces;
 using Billder.Application.Repository.Interfaces;
+using Billder.Infrastructure.DTOs;
 using Billder.Infrastructure.Entities;
 
 namespace Billder.Application.Services
@@ -40,7 +41,38 @@ namespace Billder.Application.Services
             return await _uRegistradoRepository.GetUsuarioRegistradoByIDRepository(id);
         }
 
-        public async Task<UsuarioRegistrado> UpdateUsuarioRegistrado(UsuarioRegistrado usuario)
+        public Task<bool> UpdatePasword(UsuarioRegistrado usuario, ChangePasswordDTO request)
+        {
+            if (string.IsNullOrEmpty(request.newPassword))
+            {
+                throw new ArgumentException("La password no puede estar vacia", nameof(request.newPassword));
+            }
+            try
+            {
+                if(!VerifyPassword(usuario.Password, request.oldPassword))
+                {
+                    throw new ArgumentException("La password actual no es correcta");
+                }
+                usuario.Password = _utilidades.encriptarSHA256(request.newPassword);
+                return UpdateUsuarioRegistrado(usuario);
+            }
+            catch (Exception)
+            {
+
+                throw;
+            }
+        }
+        private bool VerifyPassword(string password, string oldPassword)
+        {
+            if (password != _utilidades.encriptarSHA256(oldPassword))
+            {
+                return false;
+            }
+            return true;
+
+        }
+
+        public async Task<bool> UpdateUsuarioRegistrado(UsuarioRegistrado usuario)
         {
             return await _uRegistradoRepository.UpdateUsuarioRegistradoRepository(usuario);
         }
