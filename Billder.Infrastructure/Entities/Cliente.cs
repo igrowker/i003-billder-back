@@ -7,6 +7,7 @@ namespace Billder.Infrastructure.Entities
     {
         public Cliente()
         {
+            Presupuestos = new HashSet<Presupuesto>();
             Trabajos = new HashSet<Trabajo>();
         }
 
@@ -25,6 +26,7 @@ namespace Billder.Infrastructure.Entities
         public DateTime? FechaAlta { get; set; }
 
         public virtual UsuarioRegistrado Usuario { get; set; } = null!;
+        public virtual ICollection<Presupuesto> Presupuestos { get; set; }
         public virtual ICollection<Trabajo> Trabajos { get; set; }
     }
 }
