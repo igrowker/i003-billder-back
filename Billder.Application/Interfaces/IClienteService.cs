@@ -10,7 +10,7 @@ namespace Billder.Application.Interfaces
 {
     public interface IClienteService
     {
-        Task<Cliente> CrearCliente(ClienteDTO clienteDTO);
+        Task<Cliente> CrearCliente(Cliente cliente);
         Task<Cliente> UpdateCliente(ClienteDTO clienteDTO);
         Task<Cliente> GetClienteByID(int id);
         Task<int> DeleteCliente(int id);

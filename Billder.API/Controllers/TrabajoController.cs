@@ -37,8 +37,6 @@ namespace Billder.API.Controllers
         [HttpPost]
         public async Task<IActionResult> CrearTrabajo([FromBody] TrabajoClienteDTO request)
         {
-            _logger.LogInformation("Received request: {Request}", request);
-
             //es obligatorio que haya un cliente para un trabajo
             if (request.Trabajo == null)
             {
@@ -48,32 +46,45 @@ namespace Billder.API.Controllers
             {
                 return BadRequest("Campo Cliente no debe estar vacío");
             }
-            var usuarioCorrecto = await _uRegistradoService.GetUsuarioRegistradoByID(request.Cliente.UsuarioId);
-            if (usuarioCorrecto == null)
+            var objetoCliente = new Cliente
             {
-                return NotFound($"El usuario con ID {request.Cliente.UsuarioId} no existe.");
-            }
-
-            var clienteCreado = await _clienteService.CrearCliente(request.Cliente); //primero cliente, luego trabajo
+                UsuarioId = request.Cliente.UsuarioId,
+                Identificacion = request.Cliente.Identificacion,
+                NroIdentificacion = request.Cliente.NroIdentificacion,
+                Nombre = request.Cliente.Nombre,
+                Descripcion = request.Cliente.Descripcion,
+                Email = request.Cliente.Email,
+                Telefono = request.Cliente.Telefono,
+                Direccion = request.Cliente.Direccion,
+                Ciudad = request.Cliente.Ciudad,
+                Provincia = request.Cliente.Provincia,
+                Pais = request.Cliente.Pais
+            };
+            var clienteCreado = await _clienteService.CrearCliente(objetoCliente); //primero cliente, luego trabajo
             if (clienteCreado == null)
             {
                 return BadRequest("No se pudo crear el cliente");
             }
+
             var objetoTrabajo = new Trabajo
             {
                 UsuarioId = request.Trabajo.UsuarioId,
                 Nombre = request.Trabajo.Nombre,
-                ClienteId = clienteCreado.Id,
+                ClienteId = clienteCreado.Id, 
                 PresupuestoId = request.Trabajo.PresupuestoId,
                 Descripcion = request.Trabajo.Descripcion,
                 Fecha = request.Trabajo.Fecha,
                 EstadoTrabajo = request.Trabajo.EstadoTrabajo
             };
 
-
             var trabajoCreado  = await _service.CrearTrabajo(objetoTrabajo);
-            return CreatedAtAction(nameof(GetTrabajoByID), new { id = trabajoCreado.Id }, trabajoCreado);
-           
+
+            var response = new
+            {
+                request.Trabajo,
+                request.Cliente
+            };
+            return CreatedAtAction(nameof(GetTrabajoByID), new { id = trabajoCreado.Id }, response);
         }
 
         [HttpPut]

@@ -20,24 +20,9 @@ namespace Billder.Application.Services
             _clienteRepository = clienteRepository;
         }
 
-        public async Task<Cliente> CrearCliente(ClienteDTO clienteDTO)
+        public async Task<Cliente> CrearCliente(Cliente cliente)
         {
-            var objetoCliente = new Cliente
-            {
-                Descripcion = clienteDTO.Descripcion,
-                Email = clienteDTO.Email,
-                Identificacion = clienteDTO.Identificacion,
-                NroIdentificacion = clienteDTO.NroIdentificacion,
-                Pais = clienteDTO.Pais,
-                Provincia = clienteDTO.Provincia,
-                Ciudad = clienteDTO.Ciudad,
-                Direccion = clienteDTO.Direccion,
-                Nombre = clienteDTO.Nombre,
-                Telefono = clienteDTO.Telefono
-            };
-
-
-           return await _clienteRepository.CrearClienteRepository(objetoCliente);
+           return await _clienteRepository.CrearClienteRepository(cliente);
         }
 
         public async Task<int> DeleteCliente(int id)

@@ -19,7 +19,6 @@ namespace Billder.Application.Repository
             await _context.Trabajos.AddAsync(trabajo);
             await _context.SaveChangesAsync();
             return trabajo;
-
         }
         public async Task<Trabajo> GetTrabajoByIDRepository(int id)
         {
@@ -69,7 +68,6 @@ namespace Billder.Application.Repository
                     "OFFSET {1} ROWS FETCH NEXT {2} ROWS ONLY",
                     usuarioID, offset, trabajosPorPagina)
                 .ToListAsync();
-
             return trabajosDeUsuario;
         }
     }
