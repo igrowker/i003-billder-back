@@ -7,11 +7,7 @@ using Billder.Application.Custom;
 using Microsoft.EntityFrameworkCore;
 using AspNetCoreRateLimit;
 using DotNetEnv;
-using Microsoft.AspNetCore.Authentication.JwtBearer;
-using Microsoft.IdentityModel.Tokens;
-using System.Text;
 using Microsoft.OpenApi.Models;
-using System.Text.Json.Serialization;
 
 Env.Load();
 var builder = WebApplication.CreateBuilder(args);
@@ -76,8 +72,6 @@ builder.Services.AddSwaggerGen(c =>
         }
     });
 });
-
-
 
 
 // in-memory cache is using to store rate limit counters

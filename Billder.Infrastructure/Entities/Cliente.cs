@@ -24,6 +24,7 @@ namespace Billder.Infrastructure.Entities
         public string? Provincia { get; set; }
         public string? Pais { get; set; }
         public DateTime? FechaAlta { get; set; }
+        public string? Imagen { get; set; }
 
         public virtual UsuarioRegistrado Usuario { get; set; } = null!;
         public virtual ICollection<Presupuesto> Presupuestos { get; set; }

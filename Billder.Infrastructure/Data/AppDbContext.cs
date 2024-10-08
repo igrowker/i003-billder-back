@@ -53,6 +53,11 @@ namespace Billder.Infrastructure.Data
 
                 entity.Property(e => e.Identificacion).HasMaxLength(50);
 
+                entity.Property(e => e.Imagen)
+                    .HasMaxLength(255)
+                    .IsUnicode(false)
+                    .HasDefaultValueSql("('https://st2.depositphotos.com/3895623/5589/v/450/depositphotos_55896913-stock-illustration-usershirt.jpg')");
+
                 entity.Property(e => e.Nombre)
                     .HasMaxLength(255)
                     .IsUnicode(false);
@@ -192,6 +197,11 @@ namespace Billder.Infrastructure.Data
 
                 entity.Property(e => e.Fecha).HasColumnType("date");
 
+                entity.Property(e => e.Imagen)
+                    .HasMaxLength(255)
+                    .IsUnicode(false)
+                    .HasDefaultValueSql("('https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcT4d6HhQIVYWcf74LZEZEutP4XTVOw4TvpCZA&s')");
+
                 entity.Property(e => e.Nombre)
                     .HasMaxLength(100)
                     .IsUnicode(false);
@@ -247,6 +257,11 @@ namespace Billder.Infrastructure.Data
                     .IsUnicode(false);
 
                 entity.Property(e => e.Identificacion).HasMaxLength(50);
+
+                entity.Property(e => e.Imagen)
+                    .HasMaxLength(255)
+                    .IsUnicode(false)
+                    .HasDefaultValueSql("('https://st2.depositphotos.com/3895623/5589/v/450/depositphotos_55896913-stock-illustration-usershirt.jpg')");
 
                 entity.Property(e => e.NroIdentificacion)
                     .HasMaxLength(50)

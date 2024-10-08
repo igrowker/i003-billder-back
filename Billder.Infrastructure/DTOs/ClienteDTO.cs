@@ -20,6 +20,7 @@ namespace Billder.Infrastructure.DTOs
         public string? Ciudad { get; set; }
         public string? Provincia { get; set; }
         public string? Pais { get; set; }
+        public string? Imagen { get; set; }
         public DateTime? FechaAlta { get; set; }
     }
 }

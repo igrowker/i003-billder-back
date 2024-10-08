@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
 
 namespace Billder.Infrastructure.Entities
 {
@@ -12,11 +11,8 @@ namespace Billder.Infrastructure.Entities
         }
 
         public int Id { get; set; }
-        [Required]
         public int UsuarioId { get; set; }
-        [Required]
         public int GastoId { get; set; }
-        [Required]
         public int ClienteId { get; set; }
         public string EstadoPresupuesto { get; set; } = null!;
 

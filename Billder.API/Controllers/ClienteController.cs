@@ -54,6 +54,7 @@ namespace Billder.API.Controllers
                 Ciudad = clienteDTO.Ciudad,
                 Provincia = clienteDTO.Provincia,
                 Pais = clienteDTO.Pais,
+                Imagen = clienteDTO.Imagen,
                 FechaAlta = clienteDTO.FechaAlta
             };
 

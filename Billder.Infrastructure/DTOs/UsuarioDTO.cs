@@ -19,5 +19,6 @@ namespace Billder.Infrastructure.DTOs
         public string? Pais { get; set; }
         public string? Telefono { get; set; }
         public string Password { get; set; } = null!;
+        public string? Imagen {get; set;}
     }
 }

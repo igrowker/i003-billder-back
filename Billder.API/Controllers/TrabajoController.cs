@@ -8,7 +8,7 @@ using Billder.Infrastructure.DTOs;
 namespace Billder.API.Controllers
 {
     [Route("api/[controller]")]
-    [Authorize]
+    //[Authorize]
     [ApiController]
     public class TrabajoController : ControllerBase
     {
@@ -59,6 +59,7 @@ namespace Billder.API.Controllers
                 Direccion = request.Cliente.Direccion,
                 Ciudad = request.Cliente.Ciudad,
                 Provincia = request.Cliente.Provincia,
+                Imagen = request.Cliente.Imagen,
                 Pais = request.Cliente.Pais
             };
             var clienteCreado = await _clienteService.CrearCliente(objetoCliente); //primero cliente, luego trabajo
@@ -79,6 +80,7 @@ namespace Billder.API.Controllers
                 Direccion = clienteCreado.Direccion,
                 Ciudad = clienteCreado.Ciudad,
                 Provincia = clienteCreado.Provincia,
+                Imagen = clienteCreado.Imagen,
                 Pais = clienteCreado.Pais
             };
             var objetoTrabajo = new Trabajo
@@ -89,6 +91,7 @@ namespace Billder.API.Controllers
                 PresupuestoId = request.Trabajo.PresupuestoId,
                 Descripcion = request.Trabajo.Descripcion,
                 Fecha = request.Trabajo.Fecha,
+                Imagen = request.Trabajo.Imagen,
                 EstadoTrabajo = request.Trabajo.EstadoTrabajo
             };
 
@@ -103,6 +106,7 @@ namespace Billder.API.Controllers
                 PresupuestoId = trabajoCreado.PresupuestoId,
                 Descripcion = trabajoCreado.Descripcion,
                 Fecha = trabajoCreado.Fecha,
+                Imagen = trabajoCreado.Imagen,
                 EstadoTrabajo = trabajoCreado.EstadoTrabajo,
             };
             var response = new TrabajoClienteDTO
@@ -128,6 +132,7 @@ namespace Billder.API.Controllers
                 PresupuestoId = trabajoDTO.PresupuestoId,
                 Descripcion = trabajoDTO.Descripcion,
                 Fecha = trabajoDTO.Fecha,
+                Imagen = trabajoDTO.Imagen,
                 EstadoTrabajo = trabajoDTO.EstadoTrabajo
             };
 
@@ -155,6 +160,7 @@ namespace Billder.API.Controllers
                 ClienteId = trabajoDTO.ClienteId,
                 PresupuestoId = trabajoDTO.PresupuestoId,
                 Descripcion = trabajoDTO.Descripcion,
+                Imagen = trabajoDTO.Imagen,
                 Fecha = trabajoDTO.Fecha,
                 EstadoTrabajo = trabajoDTO.EstadoTrabajo
             };
