@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
 
 namespace Billder.Infrastructure.Entities
 {
@@ -13,15 +12,13 @@ namespace Billder.Infrastructure.Entities
         }
 
         public int Id { get; set; }
-        [Required]
         public int UsuarioId { get; set; }
         public string? Nombre { get; set; }
-        [Required]
         public int? ClienteId { get; set; }
-        [Required]
         public int? PresupuestoId { get; set; }
         public string? Descripcion { get; set; }
         public DateTime? Fecha { get; set; }
+        public string? Imagen { get; set; }
         public string EstadoTrabajo { get; set; } = null!;
 
         public virtual Cliente? Cliente { get; set; }

@@ -27,6 +27,7 @@ namespace Billder.Infrastructure.Entities
         public string? Pais { get; set; }
         public string? Telefono { get; set; }
         public string Password { get; set; } = null!;
+        public string? Imagen { get; set; }
         public string? Firma { get; set; }
 
         public virtual ICollection<Cliente> Clientes { get; set; }

@@ -1,4 +1,6 @@
 ﻿using Billder.Application.Interfaces;
+using Billder.Application.Services;
+using Billder.Infrastructure.DTOs;
 using Billder.Infrastructure.Entities;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -12,10 +14,12 @@ namespace Billder.API.Controllers
     public class PresupuestoController : ControllerBase
     {
         private readonly IPresupuestoService _presupuestoService;
+        private readonly IGastoService _gastoService;
 
-        public PresupuestoController(IPresupuestoService presupuestoService)
+        public PresupuestoController(IPresupuestoService presupuestoService, IGastoService gastoService)
         {
             _presupuestoService = presupuestoService;
+            _gastoService = gastoService;
         }
 
         [HttpGet]
@@ -41,6 +45,25 @@ namespace Billder.API.Controllers
         [HttpPost]
         public async Task<ActionResult<Presupuesto>> Create([FromBody] Presupuesto presupuesto)
         {
+            var createdPresupuesto = await _presupuestoService.CreatePresupuestoAsync(presupuesto);
+            return CreatedAtAction(nameof(GetById), new { id = createdPresupuesto.Id }, createdPresupuesto);
+        }
+        [HttpPost]
+        public async Task<ActionResult<Presupuesto>> CreatePresupuestoGasto([FromBody] PresupuestoGastoDTO request)
+        {
+            if (request.Presupuesto == null)
+            {
+                return BadRequest("Campo Presupuesto no debe estar vacío");
+            }
+            if (request.Gasto == null)
+            {
+                return BadRequest("Campo Gasto no debe estar vacío");
+            }
+            var objetoPresupuesto = new Presupuesto
+            {
+                UsuarioId = request.Presupuesto.UsuarioId,
+                 = request
+            };
             var createdPresupuesto = await _presupuestoService.CreatePresupuestoAsync(presupuesto);
             return CreatedAtAction(nameof(GetById), new { id = createdPresupuesto.Id }, createdPresupuesto);
         }

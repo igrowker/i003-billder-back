@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace Billder.Infrastructure.DTOs
 {
-    public class PresupuestoGasto
+    public class PresupuestoGastoDTO
     {
         public PresupuestoDTO Presupuesto { get; set; } = null!;
         public GastoDTO Gasto { get; set; } = null!;
