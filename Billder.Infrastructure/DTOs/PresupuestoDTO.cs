@@ -13,6 +13,7 @@ namespace Billder.Infrastructure.DTOs
         public int GastoId { get; set; }
         public int ContratoId { get; set; }
         public int ClienteId { get; set; }
+        public DateTime? FechaVencimiento { get; set; }
         public string EstadoPresupuesto { get; set; } = null!;
     }
 }
