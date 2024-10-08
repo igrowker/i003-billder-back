@@ -2,10 +2,12 @@
 using Billder.Application.Services;
 using Billder.Infrastructure.Entities;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Authorization;
 
 namespace Billder.API.Controllers
 {
     [Route("api/[controller]")]
+    //[Authorize]
     [ApiController]
     public class GastoController : ControllerBase
     {

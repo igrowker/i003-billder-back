@@ -42,6 +42,10 @@ builder.Services.AddScoped<IContratoRepository, ContratoRepository>();
 builder.Services.AddScoped<IContratoService, ContratoService>();
 builder.Services.AddScoped<ContratoService>();
 
+builder.Services.AddScoped<IGastoRepository, GastoRepository>();
+builder.Services.AddScoped<IGastoService, GastoService>();
+builder.Services.AddScoped<GastoService>();
+
 builder.Services.AddControllers();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
