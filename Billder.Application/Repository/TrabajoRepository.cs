@@ -84,7 +84,5 @@ namespace Billder.Application.Repository
 
             return trabajosDeUsuario;
         }
-
-
     }
 }
