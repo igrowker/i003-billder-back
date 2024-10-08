@@ -4,7 +4,7 @@ using Billder.Application.Repository.Interfaces;
 using Billder.Infrastructure.DTOs;
 using Billder.Infrastructure.Entities;
 
-namespace Billder.Application.Services
+namespace Billder.Application.Services;
     public class TrabajoService : ITrabajoInterface
     {
         private readonly ITrabajoRepository _trabajoRepository;
@@ -38,4 +38,3 @@ namespace Billder.Application.Services
             return await _trabajoRepository.GetHistorialDeTrabajosRepository(clienteID,numeroPagina,ordenamiento);
         }
     }
-}

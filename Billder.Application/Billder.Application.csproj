@@ -23,8 +23,4 @@
     <ProjectReference Include="..\Billder.Infrastructure\Billder.Infrastructure.csproj" />
   </ItemGroup>
 
-  <ItemGroup>
-    <Folder Include="Custom\NewFolder\" />
-  </ItemGroup>
-
 </Project>
