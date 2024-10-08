@@ -14,12 +14,10 @@ namespace Billder.API.Controllers
     public class PresupuestoController : ControllerBase
     {
         private readonly IPresupuestoService _presupuestoService;
-        private readonly IGastoService _gastoService;
 
-        public PresupuestoController(IPresupuestoService presupuestoService, IGastoService gastoService)
+        public PresupuestoController(IPresupuestoService presupuestoService)
         {
             _presupuestoService = presupuestoService;
-            _gastoService = gastoService;
         }
 
         [HttpGet]

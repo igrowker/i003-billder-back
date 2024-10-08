@@ -42,6 +42,7 @@ namespace Billder.API.Controllers
             var objetoGasto = new Gasto
             {
                 UsuarioId = gastoDTO.UsuarioId,
+                PresupuestoId = gastoDTO.PresupuestoId,
                 Nombre = gastoDTO.Nombre,
                 Cantidad = gastoDTO.Cantidad,
                 Precio = gastoDTO.Precio,
@@ -72,6 +73,7 @@ namespace Billder.API.Controllers
             {
                 Id = gastoDTO.Id,
                 UsuarioId = gastoDTO.UsuarioId,
+                PresupuestoId = gastoDTO.PresupuestoId,
                 Nombre = gastoDTO.Nombre,
                 Cantidad = gastoDTO.Cantidad,
                 Precio = gastoDTO.Precio,

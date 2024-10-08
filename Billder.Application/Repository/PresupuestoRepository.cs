@@ -35,7 +35,7 @@ namespace Billder.Application.Repository
             {
                 return false;
             }
-
+            _context.Gastos.RemoveRange(presupuesto.Gastos);
             _context.Presupuestos.Remove(presupuesto);
             await _context.SaveChangesAsync();
             return true;

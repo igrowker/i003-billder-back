@@ -10,6 +10,7 @@ namespace Billder.Infrastructure.DTOs
     {
         public int Id { get; set; }
         public int UsuarioId { get; set; }
+        public int PresupuestoId { get; set; }
         public string? Nombre { get; set; }
         public int? Cantidad { get; set; }
         public decimal? Precio { get; set; }
