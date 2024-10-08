@@ -92,27 +92,24 @@ namespace Billder.Infrastructure.Data
                     .HasColumnType("date")
                     .HasDefaultValueSql("(getdate())");
 
-                entity.Property(e => e.FechaFirma).HasColumnType("date");
+                entity.Property(e => e.FechaFirma)
+                    .HasColumnType("date")
+                    .HasDefaultValueSql("(getdate())");
 
                 entity.Property(e => e.FirmaDigital)
                     .HasMaxLength(255)
                     .IsUnicode(false);
 
-                entity.HasOne(d => d.Presupuesto)
-                    .WithMany(p => p.Contratos)
-                    .HasForeignKey(d => d.PresupuestoId)
-                    .HasConstraintName("FK__Contrato__Presup__534D60F1");
-
                 entity.HasOne(d => d.Trabajo)
                     .WithMany(p => p.Contratos)
                     .HasForeignKey(d => d.TrabajoId)
-                    .HasConstraintName("FK__Contrato__Trabaj__5165187F");
+                    .HasConstraintName("FK__Contrato__Trabaj__52593CB8");
 
                 entity.HasOne(d => d.Usuario)
                     .WithMany(p => p.Contratos)
                     .HasForeignKey(d => d.UsuarioId)
                     .OnDelete(DeleteBehavior.ClientSetNull)
-                    .HasConstraintName("FK__Contrato__Usuari__52593CB8");
+                    .HasConstraintName("FK__Contrato__Usuari__534D60F1");
             });
 
             modelBuilder.Entity<Gasto>(entity =>
@@ -221,10 +218,10 @@ namespace Billder.Infrastructure.Data
             {
                 entity.ToTable("UsuarioRegistrado");
 
-                entity.HasIndex(e => e.NroIdentificacion, "UQ__UsuarioR__054623046C3D1563")
+                entity.HasIndex(e => e.NroIdentificacion, "UQ__UsuarioR__05462304E6FA2CD6")
                     .IsUnique();
 
-                entity.HasIndex(e => e.Email, "UQ__UsuarioR__A9D1053486F0FD6A")
+                entity.HasIndex(e => e.Email, "UQ__UsuarioR__A9D105349D273D9C")
                     .IsUnique();
 
                 entity.Property(e => e.Ciudad)
@@ -260,7 +257,7 @@ namespace Billder.Infrastructure.Data
                     .IsUnicode(false);
 
                 entity.Property(e => e.Password)
-                    .HasMaxLength(50)
+                    .HasMaxLength(160)
                     .IsUnicode(false);
 
                 entity.Property(e => e.Provincia)

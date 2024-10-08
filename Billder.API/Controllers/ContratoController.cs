@@ -1,5 +1,4 @@
-﻿using Billder.Application.Interfaces;
-using Billder.Application.Repository.Interfaces;
+﻿using Billder.Application.Repository.Interfaces;
 using Billder.Application.Services;
 using Billder.Infrastructure.DTOs;
 using Billder.Infrastructure.Entities;
@@ -37,26 +36,55 @@ namespace Billder.API.Controllers
             {
                 return BadRequest("Contrato no debe estar vacío");
             }
+
             var objetoContrato = new Contrato
             {
-                Condiciones = contratoDTO.Condiciones
+                UsuarioId = contratoDTO.UsuarioId,
+                TrabajoId = contratoDTO.TrabajoId,
+                PresupuestoId = contratoDTO.PresupuestoId,
+                Condiciones = contratoDTO.Condiciones,
+                FechaCreacion = contratoDTO.FechaCreacion,
+                FechaFirma = contratoDTO.FechaFirma,
+                Estado = contratoDTO.Estado,
+                FirmaDigital = contratoDTO.FirmaDigital
             };
 
             var contratoCreado = await _service.CrearContrato(objetoContrato);
             return CreatedAtAction(nameof(GetContratoByID), new { id = contratoCreado.Id }, contratoCreado);
         }
 
+
         [HttpPut]
-        public async Task<IActionResult> UpdateContrato(Contrato contrato)
+        public async Task<IActionResult> UpdateContrato(ContratoDTO contratoDTO)
         {
-            if (contrato == null)
+            if (contratoDTO == null)
             {
                 return BadRequest("El contrato no puede ser nulo");
             }
 
-            var trabajoEncontrado = await _service.UpdateContrato(contrato);
-            return Ok(trabajoEncontrado);
+            var contratoExistente = await _service.GetContratoByID(contratoDTO.Id);
+            if (contratoExistente == null)
+            {
+                return NotFound($"Contrato con ID {contratoDTO.Id} no encontrado");
+            }
+
+            var objetoContrato = new Contrato
+            {
+                Id = contratoDTO.Id, //no se modifica
+                UsuarioId = contratoDTO.UsuarioId,
+                TrabajoId = contratoDTO.TrabajoId,
+                PresupuestoId = contratoDTO.PresupuestoId,
+                Condiciones = contratoDTO.Condiciones,
+                FechaCreacion = contratoDTO.FechaCreacion,
+                FechaFirma = contratoDTO.FechaFirma,
+                Estado = contratoDTO.Estado,
+                FirmaDigital = contratoDTO.FirmaDigital
+            };
+
+            var contratoActualizado = await _service.UpdateContrato(objetoContrato);
+            return Ok(contratoActualizado);
         }
+
 
         [HttpDelete]
         public async Task<IActionResult> DeleteContrato(int id)

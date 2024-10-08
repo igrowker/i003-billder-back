@@ -34,8 +34,9 @@ namespace Billder.API.Controllers
             return Ok(trabajo);
         }
 
+        [Route("trabajocliente")]
         [HttpPost]
-        public async Task<IActionResult> CrearTrabajo([FromBody] TrabajoClienteDTO request)
+        public async Task<IActionResult> CrearTrabajoCliente([FromBody] TrabajoClienteDTO request)
         {
             //es obligatorio que haya un cliente para un trabajo
             if (request.Trabajo == null)
@@ -65,7 +66,21 @@ namespace Billder.API.Controllers
             {
                 return BadRequest("No se pudo crear el cliente");
             }
-
+            var clienteResponse = new ClienteDTO
+            {
+                Id = clienteCreado.Id,
+                UsuarioId = clienteCreado.UsuarioId,
+                Identificacion = clienteCreado.Identificacion,
+                NroIdentificacion = clienteCreado.NroIdentificacion,
+                Nombre = clienteCreado.Nombre,
+                Descripcion = clienteCreado.Descripcion,
+                Email = clienteCreado.Email,
+                Telefono = clienteCreado.Telefono,
+                Direccion = clienteCreado.Direccion,
+                Ciudad = clienteCreado.Ciudad,
+                Provincia = clienteCreado.Provincia,
+                Pais = clienteCreado.Pais
+            };
             var objetoTrabajo = new Trabajo
             {
                 UsuarioId = request.Trabajo.UsuarioId,
@@ -79,12 +94,45 @@ namespace Billder.API.Controllers
 
             var trabajoCreado  = await _service.CrearTrabajo(objetoTrabajo);
 
-            var response = new
+            var trabajoResponse = new TrabajoDTO
             {
-                request.Trabajo,
-                request.Cliente
+                Id = trabajoCreado.Id,
+                UsuarioId = trabajoCreado.UsuarioId,
+                Nombre = trabajoCreado.Nombre,
+                ClienteId = trabajoCreado.ClienteId,
+                PresupuestoId = trabajoCreado.PresupuestoId,
+                Descripcion = trabajoCreado.Descripcion,
+                Fecha = trabajoCreado.Fecha,
+                EstadoTrabajo = trabajoCreado.EstadoTrabajo,
+            };
+            var response = new TrabajoClienteDTO
+            {
+                Cliente = clienteResponse,
+                Trabajo = trabajoResponse
             };
             return CreatedAtAction(nameof(GetTrabajoByID), new { id = trabajoCreado.Id }, response);
+        }
+        [HttpPost]
+        public async Task<IActionResult> CrearTrabajo([FromBody] TrabajoDTO trabajoDTO)
+        {
+            //es obligatorio que haya un cliente para un trabajo
+            if (trabajoDTO == null)
+            {
+                return BadRequest("Trabajo no debe estar vacío");
+            }
+            var objetoTrabajo = new Trabajo
+            {
+                UsuarioId = trabajoDTO.UsuarioId,
+                Nombre = trabajoDTO.Nombre,
+                ClienteId = trabajoDTO.ClienteId,
+                PresupuestoId = trabajoDTO.PresupuestoId,
+                Descripcion = trabajoDTO.Descripcion,
+                Fecha = trabajoDTO.Fecha,
+                EstadoTrabajo = trabajoDTO.EstadoTrabajo
+            };
+
+            var trabajoCreado = await _service.CrearTrabajo(objetoTrabajo);
+            return CreatedAtAction(nameof(GetTrabajoByID), new { id = trabajoCreado.Id }, trabajoCreado);
         }
 
         [HttpPut]

@@ -1,5 +1,6 @@
 ﻿using Billder.Application.Repository.Interfaces;
 using Billder.Infrastructure.Data;
+using Billder.Infrastructure.DTOs;
 using Billder.Infrastructure.Entities;
 using Microsoft.EntityFrameworkCore;
 
@@ -48,27 +49,42 @@ namespace Billder.Application.Repository
         }
 
         //agregar otros ordenamientos de ser necesario
-        public async Task<List<Trabajo>> GetHistorialDeTrabajosRepository(int usuarioID, int numeroPagina, string ordenamiento)
+        public async Task<List<TrabajoDTO>> GetHistorialDeTrabajosRepository(int usuarioID, int numeroPagina, string ordenamiento)
         {
             var usuarioValido = await _context.UsuarioRegistrados.FindAsync(usuarioID);
             if (usuarioValido == null)
             {
                 throw new Exception("Usuario no encontrado");
             }
+
             int trabajosPorPagina = 5;
             int offset = (numeroPagina - 1) * trabajosPorPagina;
+
+            string query =
+                "SELECT t.Id, t.Nombre, t.ClienteId, t.UsuarioId, t.Descripcion, " +
+                "t.Fecha, t.EstadoTrabajo " +
+                "FROM dbo.Trabajo AS t " +
+                "WHERE t.UsuarioId = {0} " +
+                $"ORDER BY t.Fecha {ordenamiento} " +
+                "OFFSET {1} ROWS FETCH NEXT {2} ROWS ONLY";
+
             var trabajosDeUsuario = await _context.Trabajos
-                .FromSqlRaw(
-                    "SELECT t.Id, t.Nombre, t.ClienteId, t.UsuarioId, t.PresupuestoId, t.Descripcion, " +
-                    "t.Fecha, t.EstadoTrabajo, u.FullName AS NombreUsuario " +
-                    "FROM dbo.Trabajo AS t " +
-                    "INNER JOIN dbo.UsuarioRegistrado AS u ON t.UsuarioId = u.Id " +
-                    "WHERE t.UsuarioId = {0} " +
-                    "ORDER BY t.Fecha {ordenamiento} " +
-                    "OFFSET {1} ROWS FETCH NEXT {2} ROWS ONLY",
-                    usuarioID, offset, trabajosPorPagina)
-                .ToListAsync();
+                .FromSqlRaw(query, usuarioID, offset, trabajosPorPagina)
+                .Select(t => new TrabajoDTO
+                {
+                    Id = t.Id,
+                    Nombre = t.Nombre,
+                    ClienteId = t.ClienteId,
+                    UsuarioId = t.UsuarioId,
+                    PresupuestoId = t.PresupuestoId,
+                    Descripcion = t.Descripcion,
+                    Fecha = t.Fecha,
+                    EstadoTrabajo = t.EstadoTrabajo,
+                }).ToListAsync();
+
             return trabajosDeUsuario;
         }
+
+
     }
 }
