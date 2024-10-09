@@ -33,6 +33,7 @@ namespace Billder.Application.Repository
             objetoTrabajo.Descripcion = trabajoRecibido.Descripcion;
             objetoTrabajo.Fecha = trabajoRecibido.Fecha;
             objetoTrabajo.EstadoTrabajo = trabajoRecibido.EstadoTrabajo;
+            objetoTrabajo.Imagen = trabajoRecibido.Imagen;
             await _context.SaveChangesAsync();
             return objetoTrabajo;
         }
