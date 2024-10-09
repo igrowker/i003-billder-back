@@ -11,8 +11,8 @@ namespace Billder.Application.Interfaces
     public interface IClienteService
     {
         Task<Cliente> CrearCliente(Cliente cliente);
-        Task<Cliente> UpdateCliente(ClienteDTO clienteDTO);
-        Task<Cliente> GetClienteByID(int id);
-        Task<int> DeleteCliente(int id);
+        Task<Cliente> UpdateCliente(ClienteDTO clienteDTO, int userId);
+        Task<Cliente> GetClienteByID(int id, int userId);
+        Task<int> DeleteCliente(int id, int userId);
     }
 }

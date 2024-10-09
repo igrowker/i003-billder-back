@@ -9,7 +9,6 @@ namespace Billder.Infrastructure.DTOs
     public record ContratoDTO
     {
         public int Id { get; set; }
-        public int UsuarioId { get; set; }
         public int? TrabajoId { get; set; }
         public int? PresupuestoId { get; set; }
         public string? Condiciones { get; set; }

@@ -1,6 +1,7 @@
 ﻿using Billder.Application.Repository.Interfaces;
 using Billder.Infrastructure.Data;
 using Billder.Infrastructure.Entities;
+using Microsoft.EntityFrameworkCore;
 
 namespace Billder.Application.Repository
 {
@@ -20,9 +21,9 @@ namespace Billder.Application.Repository
             return cliente;
         }
 
-        public async Task<int> DeleteClienteRepository(int id)
+        public async Task<int> DeleteClienteRepository(int id, int userId)
         {
-            var clienteEncontrado = await _context.Clientes.FindAsync(id);
+            var clienteEncontrado = await _context.Clientes.FirstOrDefaultAsync(c => c.UsuarioId == userId && c.Id == id);
             if (clienteEncontrado == null)
             {
                 return 0;
@@ -31,14 +32,14 @@ namespace Billder.Application.Repository
             return await _context.SaveChangesAsync();
         }
 
-        public async Task<Cliente> GetClienteByIDRepository(int id)
+        public async Task<Cliente> GetClienteByIDRepository(int id, int userId)
         {
-            return await _context.Clientes.FindAsync(id);
+            return await _context.Clientes.FirstOrDefaultAsync(c => c.UsuarioId == userId && c.Id == id);
         }
 
-        public async Task<Cliente> UpdateClienteRepository(Cliente clienteRecibido)
+        public async Task<Cliente> UpdateClienteRepository(Cliente clienteRecibido, int userId)
         {
-            var objetoCliente = await _context.Clientes.FindAsync(clienteRecibido.Id);
+            var objetoCliente = await _context.Clientes.FirstOrDefaultAsync(c => c.UsuarioId == userId && c.Id == clienteRecibido.Id);
 
             objetoCliente.Descripcion = clienteRecibido.Descripcion;
             objetoCliente.Email = clienteRecibido.Email;

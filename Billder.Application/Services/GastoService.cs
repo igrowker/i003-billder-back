@@ -23,19 +23,19 @@ namespace Billder.Application.Services
             return await _gastoRepository.CrearGastoRepository(gasto);
         }
 
-        public async Task<Gasto> GetGastoByID(int id)
+        public async Task<Gasto> GetGastoByID(int id, int userId)
         {
-            return await _gastoRepository.GetGastoByIDRepository(id);
+            return await _gastoRepository.GetGastoByIDRepository(id, userId);
         }
 
-        public async Task<Gasto> UpdateGasto(Gasto gasto)
+        public async Task<Gasto> UpdateGasto(Gasto gasto, int userId)
         {
-            return await _gastoRepository.UpdateGastoRepository(gasto);
+            return await _gastoRepository.UpdateGastoRepository(gasto, userId);
         }
 
-        public async Task<int> DeleteGasto(int id)
+        public async Task<int> DeleteGasto(int id, int userId)
         {
-            return await _gastoRepository.DeleteGastoRepository(id);
+            return await _gastoRepository.DeleteGastoRepository(id, userId);
         }
 
         public async Task<List<GastoDTO>> GetHistorialDeGastoss(int clienteID, int numeroPagina, string ordenamiento)

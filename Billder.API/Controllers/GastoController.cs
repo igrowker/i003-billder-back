@@ -3,6 +3,7 @@ using Billder.Application.Services;
 using Billder.Infrastructure.Entities;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Authorization;
+using System.Security.Claims;
 
 namespace Billder.API.Controllers
 {
@@ -17,11 +18,22 @@ namespace Billder.API.Controllers
         {
             _gastoService = gastoService;
         }
+        private int ObtenerUsuarioId()
+        {
+            var userIdClaim = User.FindFirst(ClaimTypes.NameIdentifier);
+            if (userIdClaim == null)
+            {
+                throw new UnauthorizedAccessException("Token inválido o ausente.");
+            }
+
+            return int.Parse(userIdClaim.Value);
+        }
 
         [HttpGet("{id}")]
         public async Task<ActionResult<GastoDTO>> GetGastoById(int id)
         {
-            var gasto = await _gastoService.GetGastoByID(id);
+            var userId = ObtenerUsuarioId();
+            var gasto = await _gastoService.GetGastoByID(id, userId);
 
             if (gasto == null)
             {
@@ -33,7 +45,7 @@ namespace Billder.API.Controllers
 
         [HttpPost]
         public async Task<ActionResult<GastoDTO>> CrearGasto([FromBody] GastoDTO gastoDTO)
-        {
+        {           
             if (gastoDTO == null)
             {
                 return BadRequest("Gasto no debe estar vacío");
@@ -41,7 +53,7 @@ namespace Billder.API.Controllers
 
             var objetoGasto = new Gasto
             {
-                UsuarioId = gastoDTO.UsuarioId,
+                UsuarioId = ObtenerUsuarioId(),
                 PresupuestoId = gastoDTO.PresupuestoId,
                 Nombre = gastoDTO.Nombre,
                 Cantidad = gastoDTO.Cantidad,
@@ -58,12 +70,13 @@ namespace Billder.API.Controllers
         [HttpPut]
         public async Task<IActionResult> UpdateGasto([FromBody] GastoDTO gastoDTO)
         {
+            var userId = ObtenerUsuarioId();
             if (gastoDTO == null)
             {
                 return BadRequest("Gasto no debe estar vacío");
             }
 
-            var gastoEncontrado = await _gastoService.GetGastoByID(gastoDTO.Id);
+            var gastoEncontrado = await _gastoService.GetGastoByID(gastoDTO.Id, userId);
             if (gastoEncontrado == null)
             {
                 return NotFound($"Gasto con ID {gastoDTO.Id} no encontrado");
@@ -81,7 +94,7 @@ namespace Billder.API.Controllers
                 HorasTrabajadas = gastoDTO.HorasTrabajadas
             };
 
-            var updated = await _gastoService.UpdateGasto(objetoGasto);
+            var updated = await _gastoService.UpdateGasto(objetoGasto, userId);
             return Ok(updated);
         }
 
@@ -89,13 +102,14 @@ namespace Billder.API.Controllers
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeleteGasto(int id)
         {
-            var gastoEncontrado = await _gastoService.GetGastoByID(id);
+            var userId = ObtenerUsuarioId();
+            var gastoEncontrado = await _gastoService.GetGastoByID(id, userId);
             if (gastoEncontrado == null)
             {
                 return NotFound();
             }
 
-            await _gastoService.DeleteGasto(id);
+            await _gastoService.DeleteGasto(id, userId);
             return NoContent();
         }
     }

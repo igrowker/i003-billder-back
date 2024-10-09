@@ -26,10 +26,10 @@ namespace Billder.Application.Repository
             return presupuesto;
         }
 
-        public async Task<bool> DeletePresupuestoById(int id)
+        public async Task<bool> DeletePresupuestoById(int id, int userId)
         {
             var presupuesto = await _context.Presupuestos.Include(p => p.Gastos)
-                                                         .FirstOrDefaultAsync(p => p.Id == id);
+                                                         .FirstOrDefaultAsync(p => p.UsuarioId == userId && p.Id == id);
 
             if (presupuesto == null)
             {
@@ -41,21 +41,21 @@ namespace Billder.Application.Repository
             return true;
         }
 
-        public async Task<IEnumerable<Presupuesto>> GetAllPresupuesto()
+        public async Task<IEnumerable<Presupuesto>> GetAllPresupuesto(int userId)
         {
-            return await _context.Presupuestos.ToListAsync();
+            return await _context.Presupuestos.Where(p => p.UsuarioId == userId).ToListAsync();
         }
 
-        public async Task<Presupuesto> GetPresupuestoById(int id)
+        public async Task<Presupuesto> GetPresupuestoById(int id, int userId)
         {
-            var result = await _context.Presupuestos.FindAsync(id);
+            var result = await _context.Presupuestos.FirstOrDefaultAsync(p => p.UsuarioId == userId && p.Id == id);
             return result ?? null!;
             
         }
 
-        public async Task<bool> UpdatePresupuesto(Presupuesto presupuesto)
+        public async Task<bool> UpdatePresupuesto(Presupuesto presupuesto, int userId)
         {
-            var existingPresupuesto = await _context.Presupuestos.FindAsync(presupuesto.Id);
+            var existingPresupuesto = await _context.Presupuestos.FirstOrDefaultAsync(p => p.UsuarioId == userId && p.Id == presupuesto.Id);
 
             if (existingPresupuesto == null)
             {

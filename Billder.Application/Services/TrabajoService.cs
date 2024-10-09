@@ -20,18 +20,18 @@ namespace Billder.Application.Services;
 
         }
 
-        public async Task<Trabajo> GetTrabajoByID(int id)
+        public async Task<Trabajo> GetTrabajoByID(int id, int userId)
         {
-            return await _trabajoRepository.GetTrabajoByIDRepository(id);
+            return await _trabajoRepository.GetTrabajoByIDRepository(id, userId);
         }
 
-        public async Task<Trabajo> UpdateTrabajo(Trabajo trabajo)
+        public async Task<Trabajo> UpdateTrabajo(Trabajo trabajo, int userId)
         {
-            return await _trabajoRepository.UpdateTrabajoRepository(trabajo);
+            return await _trabajoRepository.UpdateTrabajoRepository(trabajo, userId);
         }
-        public async Task<int> DeleteTrabajo(int id)
+        public async Task<int> DeleteTrabajo(int id, int userId)
         {
-            return await _trabajoRepository.DeleteTrabajoRepository(id);
+            return await _trabajoRepository.DeleteTrabajoRepository(id, userId);
         }
         public async Task<List<TrabajoDTO>> GetHistorialDeTrabajos(int clienteID, int numeroPagina, string ordenamiento)
         {

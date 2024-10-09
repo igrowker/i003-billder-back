@@ -27,22 +27,22 @@ namespace Billder.Application.Repository
             }
 
         }
-        public async Task<Contrato> GetContratoByIDRepository(int id)
+        public async Task<Contrato> GetContratoByIDRepository(int id, int userId)
         {
             try
             {
-                return await _context.Contratos.FindAsync(id);
+                return await _context.Contratos.FirstOrDefaultAsync(c => c.UsuarioId == userId && c.Id == id);
             }
             catch (Exception ex)
             {
                 throw new Exception("Ocurrio un error al obtener el contrato por ID ", ex);
             }
         }
-        public async Task<Contrato> UpdateContratoRepository(Contrato contratoRecibido)
+        public async Task<Contrato> UpdateContratoRepository(Contrato contratoRecibido, int userId)
         {
             try
             {
-                var objetoContrato = await _context.Contratos.FindAsync(contratoRecibido.Id);
+                var objetoContrato = await _context.Contratos.FirstOrDefaultAsync(c => c.UsuarioId == userId && c.Id == contratoRecibido.Id);
 
                 objetoContrato.Condiciones = contratoRecibido.Condiciones;
                 objetoContrato.TrabajoId = contratoRecibido.TrabajoId;
@@ -61,9 +61,9 @@ namespace Billder.Application.Repository
             }
         }
 
-        public async Task<int> DeleteContratoRepository(int id)
+        public async Task<int> DeleteContratoRepository(int id, int userId)
         {
-            var contratoEncontrado = await _context.Contratos.FindAsync(id);
+            var contratoEncontrado = await _context.Contratos.FirstOrDefaultAsync(c => c.UsuarioId == userId && c.Id == id);
 
             _context.Contratos.Remove(contratoEncontrado);
             return await _context.SaveChangesAsync();

@@ -26,14 +26,14 @@ namespace Billder.Application.Services
             return gasto;
         }
 
-        public async Task<Gasto> GetGastoByIDRepository(int id)
+        public async Task<Gasto> GetGastoByIDRepository(int id, int userId)
         {
-            return await _context.Gastos.FindAsync(id);
+            return await _context.Gastos.FirstOrDefaultAsync(g => g.UsuarioId == userId && g.Id == id);
         }
 
-        public async Task<Gasto> UpdateGastoRepository(Gasto gastoRecibido)
+        public async Task<Gasto> UpdateGastoRepository(Gasto gastoRecibido, int userId)
         {
-            var objetoGasto = await _context.Gastos.FindAsync(gastoRecibido.Id);
+            var objetoGasto = await _context.Gastos.FirstOrDefaultAsync(g => g.UsuarioId == userId && g.Id == gastoRecibido.Id);
 
             if (objetoGasto == null)
             {
@@ -50,9 +50,9 @@ namespace Billder.Application.Services
             return objetoGasto;
         }
 
-        public async Task<int> DeleteGastoRepository(int id)
+        public async Task<int> DeleteGastoRepository(int id, int userId)
         {
-            var gastoEncontrado = await _context.Gastos.FindAsync(id);
+            var gastoEncontrado = await _context.Gastos.FirstOrDefaultAsync(g => g.UsuarioId == userId && g.Id == id);
             if (gastoEncontrado == null)
             {
                 return 0; 

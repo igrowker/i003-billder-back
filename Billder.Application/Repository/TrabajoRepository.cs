@@ -21,13 +21,13 @@ namespace Billder.Application.Repository
             await _context.SaveChangesAsync();
             return trabajo;
         }
-        public async Task<Trabajo> GetTrabajoByIDRepository(int id)
+        public async Task<Trabajo> GetTrabajoByIDRepository(int id, int userId)
         {
-                return await _context.Trabajos.FindAsync(id);
+                return await _context.Trabajos.FirstOrDefaultAsync(t => t.UsuarioId == userId && t.Id == id);
         }
-        public async Task<Trabajo> UpdateTrabajoRepository(Trabajo trabajoRecibido)
+        public async Task<Trabajo> UpdateTrabajoRepository(Trabajo trabajoRecibido, int userId)
         {
-            var objetoTrabajo = await _context.Trabajos.FindAsync(trabajoRecibido.Id);
+            var objetoTrabajo = await _context.Trabajos.FirstOrDefaultAsync(t => t.UsuarioId == userId && t.Id == trabajoRecibido.Id);
 
             objetoTrabajo.Nombre = trabajoRecibido.Nombre;
             objetoTrabajo.Descripcion = trabajoRecibido.Descripcion;
@@ -37,9 +37,9 @@ namespace Billder.Application.Repository
             return objetoTrabajo;
         }
         
-        public async Task<int> DeleteTrabajoRepository(int id)
+        public async Task<int> DeleteTrabajoRepository(int id, int userId)
         {
-            var trabajoEncontrado = await _context.Trabajos.FindAsync(id);
+            var trabajoEncontrado = await _context.Trabajos.FirstOrDefaultAsync(t => t.UsuarioId == userId && t.Id == id);
             if (trabajoEncontrado == null)
             {
                 return 0;

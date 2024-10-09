@@ -4,6 +4,7 @@ using Billder.Infrastructure.DTOs;
 using Billder.Infrastructure.Entities;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using System.Security.Claims;
 
 
 namespace Billder.API.Controllers
@@ -19,11 +20,21 @@ namespace Billder.API.Controllers
         {
             _clienteService = clienteService;
         }
+        private int ObtenerUsuarioId()
+        {
+            var userIdClaim = User.FindFirst(ClaimTypes.NameIdentifier);
+            if (userIdClaim == null)
+            {
+                throw new UnauthorizedAccessException("Token inválido o ausente.");
+            }
 
+            return int.Parse(userIdClaim.Value);
+        }
         [HttpGet("{id}")]
         public async Task<ActionResult<ClienteDTO>> GetClienteById(int id)
         {
-            var cliente = await _clienteService.GetClienteByID(id);
+            var userId = ObtenerUsuarioId();
+            var cliente = await _clienteService.GetClienteByID(id, userId);
 
             if (cliente == null)
             {
@@ -43,7 +54,7 @@ namespace Billder.API.Controllers
 
             var objetoCliente = new Cliente
             {
-                UsuarioId = clienteDTO.UsuarioId,
+                UsuarioId = ObtenerUsuarioId(),
                 Identificacion = clienteDTO.Identificacion,
                 NroIdentificacion = clienteDTO.NroIdentificacion,
                 Nombre = clienteDTO.Nombre,
@@ -66,26 +77,27 @@ namespace Billder.API.Controllers
         public async Task<IActionResult> UpdateCliente([FromBody] ClienteDTO cliente)
         {
 
-
-            var clienteEncontrado = await _clienteService.GetClienteByID(cliente.Id);
+            var userId = ObtenerUsuarioId();
+            var clienteEncontrado = await _clienteService.GetClienteByID(cliente.Id, userId);
             if (clienteEncontrado == null)
             {
                 return NotFound();
             }
 
-            var updated = await _clienteService.UpdateCliente(cliente);
+            var updated = await _clienteService.UpdateCliente(cliente, userId);
             return Ok(updated);
         }
 
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeleteCliente(int id)
         {
-            var clienteEncontrado = await _clienteService.GetClienteByID(id);
+            var userId = ObtenerUsuarioId();
+            var clienteEncontrado = await _clienteService.GetClienteByID(id, userId);
             if (clienteEncontrado == null)
             {
                 return NotFound();
             }
-            var deleted = await _clienteService.DeleteCliente(id);
+            var deleted = await _clienteService.DeleteCliente(id, userId);
 
             return NoContent();
         }

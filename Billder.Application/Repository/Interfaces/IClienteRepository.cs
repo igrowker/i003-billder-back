@@ -10,8 +10,8 @@ namespace Billder.Application.Repository.Interfaces
     public interface IClienteRepository
     {
         Task<Cliente> CrearClienteRepository(Cliente cliente);
-        Task<Cliente> UpdateClienteRepository(Cliente cliente);
-        Task<Cliente> GetClienteByIDRepository(int id);
-        Task<int> DeleteClienteRepository(int id);
+        Task<Cliente> UpdateClienteRepository(Cliente cliente, int userId);
+        Task<Cliente> GetClienteByIDRepository(int id, int userId);
+        Task<int> DeleteClienteRepository(int id, int userId);
     }
 }

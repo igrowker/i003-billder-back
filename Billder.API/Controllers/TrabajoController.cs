@@ -5,6 +5,7 @@ using Billder.Infrastructure.Entities;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Billder.Infrastructure.DTOs;
+using System.Security.Claims;
 namespace Billder.API.Controllers
 {
     [Route("api/[controller]")]
@@ -23,10 +24,21 @@ namespace Billder.API.Controllers
             _uRegistradoService = uRegistradoService;
             _logger = logger;
         }
+        private int ObtenerUsuarioId()
+        {
+            var userIdClaim = User.FindFirst(ClaimTypes.NameIdentifier);
+            if (userIdClaim == null)
+            {
+                throw new UnauthorizedAccessException("Token inválido o ausente.");
+            }
+
+            return int.Parse(userIdClaim.Value);
+        }
         [HttpGet("{id}")]
         public async Task<IActionResult> GetTrabajoByID(int id)
         {
-            var trabajo = await _service.GetTrabajoByID(id);
+            var userId = ObtenerUsuarioId();
+            var trabajo = await _service.GetTrabajoByID(id, userId);
             if (trabajo == null)
             {
                 return NotFound();
@@ -38,6 +50,7 @@ namespace Billder.API.Controllers
         [HttpPost]
         public async Task<IActionResult> CrearTrabajoCliente([FromBody] TrabajoClienteDTO request)
         {
+            var userId = ObtenerUsuarioId();
             //es obligatorio que haya un cliente para un trabajo
             if (request.Trabajo == null)
             {
@@ -49,7 +62,7 @@ namespace Billder.API.Controllers
             }
             var objetoCliente = new Cliente
             {
-                UsuarioId = request.Cliente.UsuarioId,
+                UsuarioId = ObtenerUsuarioId(),
                 Identificacion = request.Cliente.Identificacion,
                 NroIdentificacion = request.Cliente.NroIdentificacion,
                 Nombre = request.Cliente.Nombre,
@@ -69,7 +82,7 @@ namespace Billder.API.Controllers
             var clienteResponse = new ClienteDTO
             {
                 Id = clienteCreado.Id,
-                UsuarioId = clienteCreado.UsuarioId,
+                UsuarioId = ObtenerUsuarioId(),
                 Identificacion = clienteCreado.Identificacion,
                 NroIdentificacion = clienteCreado.NroIdentificacion,
                 Nombre = clienteCreado.Nombre,
@@ -83,7 +96,7 @@ namespace Billder.API.Controllers
             };
             var objetoTrabajo = new Trabajo
             {
-                UsuarioId = request.Trabajo.UsuarioId,
+                UsuarioId = ObtenerUsuarioId(),
                 Nombre = request.Trabajo.Nombre,
                 ClienteId = clienteCreado.Id, 
                 PresupuestoId = request.Trabajo.PresupuestoId,
@@ -97,7 +110,7 @@ namespace Billder.API.Controllers
             var trabajoResponse = new TrabajoDTO
             {
                 Id = trabajoCreado.Id,
-                UsuarioId = trabajoCreado.UsuarioId,
+                UsuarioId = ObtenerUsuarioId(),
                 Nombre = trabajoCreado.Nombre,
                 ClienteId = trabajoCreado.ClienteId,
                 PresupuestoId = trabajoCreado.PresupuestoId,
@@ -122,7 +135,7 @@ namespace Billder.API.Controllers
             }
             var objetoTrabajo = new Trabajo
             {
-                UsuarioId = trabajoDTO.UsuarioId,
+                UsuarioId = ObtenerUsuarioId(),
                 Nombre = trabajoDTO.Nombre,
                 ClienteId = trabajoDTO.ClienteId,
                 PresupuestoId = trabajoDTO.PresupuestoId,
@@ -138,11 +151,12 @@ namespace Billder.API.Controllers
         [HttpPut]
         public async Task<IActionResult> UpdateTrabajo(TrabajoDTO trabajoDTO)
         {
+            var userId = ObtenerUsuarioId();
             if (trabajoDTO == null)
             {
                 return BadRequest("El trabajo no puede ser nulo");
             }
-            var trabajoExistente = await _service.GetTrabajoByID(trabajoDTO.Id);
+            var trabajoExistente = await _service.GetTrabajoByID(trabajoDTO.Id, userId);
             if (trabajoExistente == null)
             {
                 return NotFound($"Trabajo con ID {trabajoDTO.Id} no encontrado");
@@ -158,19 +172,20 @@ namespace Billder.API.Controllers
                 Fecha = trabajoDTO.Fecha,
                 EstadoTrabajo = trabajoDTO.EstadoTrabajo
             };
-            var trabajoEncontrado = await _service.UpdateTrabajo(objetoTrabajo);
+            var trabajoEncontrado = await _service.UpdateTrabajo(objetoTrabajo, userId);
             return Ok(trabajoEncontrado);
         }
 
         [HttpDelete]
         public async Task<IActionResult> DeleteTrabajo(int id)
         {
-            var trabajoEncontrado = await _service.GetTrabajoByID(id);
+            var userId = ObtenerUsuarioId();
+            var trabajoEncontrado = await _service.GetTrabajoByID(id, userId);
             if (trabajoEncontrado == null)
             {
                 return NotFound("No se encontro un trabajo con ese ID");
             }
-            var trabajoBorrado = await _service.DeleteTrabajo(id);
+            var trabajoBorrado = await _service.DeleteTrabajo(id, userId);
             if (trabajoBorrado == 0)
             {
                 return NotFound("No se encontro un trabajo para eliminar");

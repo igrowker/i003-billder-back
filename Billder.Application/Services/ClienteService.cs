@@ -25,19 +25,19 @@ namespace Billder.Application.Services
            return await _clienteRepository.CrearClienteRepository(cliente);
         }
 
-        public async Task<int> DeleteCliente(int id)
+        public async Task<int> DeleteCliente(int id, int userId)
         {
-            return await _clienteRepository.DeleteClienteRepository(id);
+            return await _clienteRepository.DeleteClienteRepository(id, userId);
         }
 
-        public async Task<Cliente> GetClienteByID(int id)
+        public async Task<Cliente> GetClienteByID(int id, int userId)
         {
-            return await _clienteRepository.GetClienteByIDRepository(id);
+            return await _clienteRepository.GetClienteByIDRepository(id, userId);
         }
 
-        public async Task<Cliente> UpdateCliente(ClienteDTO clienteDTO)
+        public async Task<Cliente> UpdateCliente(ClienteDTO clienteDTO, int userId)
         {
-            var objetoCliente = await _clienteRepository.GetClienteByIDRepository(clienteDTO.Id);
+            var objetoCliente = await _clienteRepository.GetClienteByIDRepository(clienteDTO.Id, userId);
 
             objetoCliente.Descripcion = clienteDTO.Descripcion;
             objetoCliente.Email = clienteDTO.Email;
@@ -50,7 +50,7 @@ namespace Billder.Application.Services
             objetoCliente.Nombre = clienteDTO.Nombre;
             objetoCliente.Telefono = clienteDTO.Telefono;
 
-             await _clienteRepository.UpdateClienteRepository(objetoCliente);
+             await _clienteRepository.UpdateClienteRepository(objetoCliente, userId);
             return objetoCliente;
         }
     }

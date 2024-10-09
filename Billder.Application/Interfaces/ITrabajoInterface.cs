@@ -5,10 +5,10 @@ namespace Billder.Application.Interfaces
 {
     public interface ITrabajoInterface
     {
-        Task<Trabajo> GetTrabajoByID(int id);
+        Task<Trabajo> GetTrabajoByID(int id, int userId);
         Task<Trabajo> CrearTrabajo(Trabajo trabajo);
-        Task<Trabajo> UpdateTrabajo(Trabajo trabajo);
-        Task<int> DeleteTrabajo(int id);
+        Task<Trabajo> UpdateTrabajo(Trabajo trabajo, int userId);
+        Task<int> DeleteTrabajo(int id, int userId);
         Task<List<TrabajoDTO>> GetHistorialDeTrabajos(int usuarioID, int numeroPagina, string ordenamiento);
     }
 }
