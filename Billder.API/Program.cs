@@ -11,6 +11,7 @@ using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
 using System.Text;
 using Microsoft.OpenApi.Models;
+using System.Text.Json.Serialization;
 
 Env.Load();
 var builder = WebApplication.CreateBuilder(args);
@@ -20,10 +21,15 @@ builder.Services.AddControllers(options =>
 {
     options.Filters.Add(typeof(ExceptionHandler));
 });
+
 // Add services to the container.
 builder.Services.AddScoped<ITrabajoRepository, TrabajoRepository>();
 builder.Services.AddScoped<ITrabajoInterface, TrabajoService>();
 builder.Services.AddScoped<TrabajoService>();
+
+builder.Services.AddScoped<IClienteRepository, ClienteRepository>();
+builder.Services.AddScoped<IClienteService, ClienteService>();
+builder.Services.AddScoped<ClienteService>();
 
 builder.Services.AddScoped<IPresupuestoRepository, PresupuestoRepository>();
 builder.Services.AddScoped<IPresupuestoService, PresupuestoService>();
@@ -31,20 +37,14 @@ builder.Services.AddScoped<IPresupuestoService, PresupuestoService>();
 builder.Services.AddScoped<IURegistradoRepository, URegistradoRepository>();
 builder.Services.AddScoped<IURegistradoInterface, UsuarioRegistradoService>();
 
-builder.Services.AddScoped<IMaterialRepository, MaterialRepository>();
-builder.Services.AddScoped<IMaterialService, MaterialService>();
-
-builder.Services.AddScoped<IEmpleadoRepository, EmpleadoRepository>();
-builder.Services.AddScoped<IEmpleadoService, EmpleadoService>();
 
 builder.Services.AddScoped<IContratoRepository, ContratoRepository>();
 builder.Services.AddScoped<IContratoService, ContratoService>();
+builder.Services.AddScoped<ContratoService>();
 
-builder.Services.AddScoped<IPresupuestoEmpleadoRepository, PresupuestoEmpleadoRepository>();
-builder.Services.AddScoped<IPresupuestoEmpleadoService, PresupuestoEmpleadoService>();
-
-builder.Services.AddScoped<IPresupuestoMaterialRepository, PresupuestoMaterialRepository>();
-builder.Services.AddScoped<IPresupuestoMaterialService, PresupuestoMaterialService>();
+builder.Services.AddScoped<IGastoRepository, GastoRepository>();
+builder.Services.AddScoped<IGastoService, GastoService>();
+builder.Services.AddScoped<GastoService>();
 
 builder.Services.AddControllers();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle

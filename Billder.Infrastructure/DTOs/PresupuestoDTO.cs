@@ -6,9 +6,11 @@ using System.Threading.Tasks;
 
 namespace Billder.Infrastructure.DTOs
 {
-    public record class PresupuestoDTO(
-        int Id, 
-        string EstadoPresupuesto
-        );
-    
+    public class PresupuestoDTO
+    {
+        public int Id { get; set; }
+        public int ClienteId { get; set; }
+        public DateTime? FechaVencimiento { get; set; }
+        public string EstadoPresupuesto { get; set; } = null!;
+    }
 }
