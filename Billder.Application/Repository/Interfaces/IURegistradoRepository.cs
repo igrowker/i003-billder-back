@@ -10,7 +10,7 @@ namespace Billder.Application.Repository.Interfaces
     public interface IURegistradoRepository
     {
         Task<UsuarioRegistrado> CrearUsuarioRegistradoRepository(UsuarioRegistrado usuario);
-        Task<UsuarioRegistrado> UpdateUsuarioRegistradoRepository(UsuarioRegistrado usuario);
+        Task<bool> UpdateUsuarioRegistradoRepository(UsuarioRegistrado usuario);
         Task<UsuarioRegistrado> GetUsuarioRegistradoByIDRepository(int id);
         Task<int> DeleteUsuarioRegistradoRepository(int id);
         Task<List<UsuarioRegistrado>> GetAllUsuariosRegistradosRepository(int numeroPagina, string ordenamiento);
