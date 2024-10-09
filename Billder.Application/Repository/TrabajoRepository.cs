@@ -50,19 +50,15 @@ namespace Billder.Application.Repository
         }
 
         //agregar otros ordenamientos de ser necesario
-        public async Task<List<TrabajoDTO>> GetHistorialDeTrabajosRepository(int usuarioID, int numeroPagina, string ordenamiento)
+        public async Task<List<TrabajoDTO>> GetHistorialDeTrabajosRepository(int usuarioId, int userId, int numeroPagina, string ordenamiento)
         {
-            var usuarioValido = await _context.UsuarioRegistrados.FindAsync(usuarioID);
-            if (usuarioValido == null)
-            {
-                throw new Exception("Usuario no encontrado");
-            }
+            var usuarioValido = await _context.UsuarioRegistrados.FirstOrDefaultAsync(u => u.Id == userId && u.Id == usuarioId);
 
-            int trabajosPorPagina = 5;
+            int trabajosPorPagina = 10;
             int offset = (numeroPagina - 1) * trabajosPorPagina;
 
             string query =
-                "SELECT t.Id, t.Nombre, t.ClienteId, t.UsuarioId, t.Descripcion, " +
+                "SELECT t.Id, t.Nombre, t.ClienteId, t.UsuarioId, t.PresupuestoId, t.Descripcion, " +
                 "t.Fecha, t.EstadoTrabajo " +
                 "FROM dbo.Trabajo AS t " +
                 "WHERE t.UsuarioId = {0} " +
@@ -70,7 +66,7 @@ namespace Billder.Application.Repository
                 "OFFSET {1} ROWS FETCH NEXT {2} ROWS ONLY";
 
             var trabajosDeUsuario = await _context.Trabajos
-                .FromSqlRaw(query, usuarioID, offset, trabajosPorPagina)
+                .FromSqlRaw(query, userId, offset, trabajosPorPagina)
                 .Select(t => new TrabajoDTO
                 {
                     Id = t.Id,

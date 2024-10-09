@@ -9,6 +9,6 @@ namespace Billder.Application.Interfaces
         Task<Trabajo> CrearTrabajo(Trabajo trabajo);
         Task<Trabajo> UpdateTrabajo(Trabajo trabajo, int userId);
         Task<int> DeleteTrabajo(int id, int userId);
-        Task<List<TrabajoDTO>> GetHistorialDeTrabajos(int usuarioID, int numeroPagina, string ordenamiento);
+        Task<List<TrabajoDTO>> GetHistorialDeTrabajos(int usuarioID, int userId, int numeroPagina, string ordenamiento);
     }
 }

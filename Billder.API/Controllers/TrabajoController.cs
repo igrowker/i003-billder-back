@@ -31,7 +31,6 @@ namespace Billder.API.Controllers
             {
                 throw new UnauthorizedAccessException("Token inválido o ausente.");
             }
-
             return int.Parse(userIdClaim.Value);
         }
         [HttpGet("{id}")]
@@ -197,18 +196,16 @@ namespace Billder.API.Controllers
             return NoContent();
         }
         [HttpGet]
-        public async Task<IActionResult> GetHistorialDeTrabajos(int usuarioID, int numeroPagina, string ordenamiento)
+        public async Task<IActionResult> GetHistorialDeTrabajos(int usuarioId, int numeroPagina, string ordenamiento)
         {
-            if (usuarioID <= 0)
-            {
-                return NotFound("No se pudo encontrar al usuario");
-            }
+            var userId = ObtenerUsuarioId();
+
             if(ordenamiento != "ASC" && ordenamiento != "DESC") //solo acepta uno a la vez, y debe coincidir con esos valores
             {
                 return BadRequest("El ordenamiento es invalido");
             }
 
-            var trabajos = await _service.GetHistorialDeTrabajos(usuarioID, numeroPagina, ordenamiento);
+            var trabajos = await _service.GetHistorialDeTrabajos(usuarioId, userId, numeroPagina, ordenamiento);
             return Ok(trabajos);
         }
     }
