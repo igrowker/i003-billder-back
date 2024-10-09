@@ -88,6 +88,7 @@ namespace Billder.API.Controllers
                 ClienteId = clienteCreado.Id, 
                 PresupuestoId = request.Trabajo.PresupuestoId,
                 Descripcion = request.Trabajo.Descripcion,
+                Imagen = request.Trabajo.Imagen,
                 Fecha = request.Trabajo.Fecha,
                 EstadoTrabajo = request.Trabajo.EstadoTrabajo
             };
@@ -102,6 +103,7 @@ namespace Billder.API.Controllers
                 ClienteId = trabajoCreado.ClienteId,
                 PresupuestoId = trabajoCreado.PresupuestoId,
                 Descripcion = trabajoCreado.Descripcion,
+                Imagen = trabajoCreado.Imagen,
                 Fecha = trabajoCreado.Fecha,
                 EstadoTrabajo = trabajoCreado.EstadoTrabajo,
             };
@@ -128,6 +130,7 @@ namespace Billder.API.Controllers
                 PresupuestoId = trabajoDTO.PresupuestoId,
                 Descripcion = trabajoDTO.Descripcion,
                 Fecha = trabajoDTO.Fecha,
+                Imagen = trabajoDTO.Imagen,
                 EstadoTrabajo = trabajoDTO.EstadoTrabajo
             };
 
@@ -156,6 +159,7 @@ namespace Billder.API.Controllers
                 PresupuestoId = trabajoDTO.PresupuestoId,
                 Descripcion = trabajoDTO.Descripcion,
                 Fecha = trabajoDTO.Fecha,
+                Imagen = trabajoDTO.Imagen,
                 EstadoTrabajo = trabajoDTO.EstadoTrabajo
             };
             var trabajoEncontrado = await _service.UpdateTrabajo(objetoTrabajo);

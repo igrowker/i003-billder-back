@@ -54,6 +54,7 @@ namespace Billder.API.Controllers
                 Provincia = usuarioDTO.Provincia,
                 Pais = usuarioDTO.Pais,
                 Telefono = usuarioDTO.Telefono,
+                Imagen = usuarioDTO.Imagen,
                 Password = _utilidades.encriptarSHA256(usuarioDTO.Password)
             };
 
@@ -70,23 +71,32 @@ namespace Billder.API.Controllers
         }
         [HttpPut]
         [Authorize]
-        public async Task<IActionResult> UpdateUsuario(UsuarioRegistrado usuario)
+        public async Task<IActionResult> UpdateUsuario(UsuarioDTO usuarioDTO)
         {
-            if (usuario == null)
+            if (usuarioDTO == null)
             {
                 return BadRequest("Faltan datos al actualizar el usuario");
             }
-            try
+            // Map UsuarioDTO to UsuarioRegistrado
+            var usuarioToUpdate = new UsuarioRegistrado
             {
-                var usuarioEncontrado = await _service.UpdateUsuarioRegistrado(usuario);
-                return Ok(usuarioEncontrado);
-            }
-            catch (Exception ex)
-            {
-                _logger.LogError(ex, "Error al actualizar el usuario");
-                return StatusCode(500, ex.Message);
-            }
+                FullName = usuarioDTO.FullName,
+                Email = usuarioDTO.Email,
+                Identificacion = usuarioDTO.Identificacion,
+                NroIdentificacion = usuarioDTO.NroIdentificacion,
+                FechaNacimiento = usuarioDTO.FechaNacimiento,
+                Direccion = usuarioDTO.Direccion,
+                Ciudad = usuarioDTO.Ciudad,
+                Provincia = usuarioDTO.Provincia,
+                Pais = usuarioDTO.Pais,
+                Telefono = usuarioDTO.Telefono,
+                Password = _utilidades.encriptarSHA256(usuarioDTO.Password),
+                Imagen = usuarioDTO.Imagen
+            };
+            var usuarioEncontrado = await _service.UpdateUsuarioRegistrado(usuarioToUpdate);
+            return Ok(usuarioEncontrado);
         }
+
         [Authorize]
         [HttpDelete]
         public async Task<IActionResult> DeleteUsuario(int id)
