@@ -1,4 +1,5 @@
 ﻿
+using Billder.Application.Custom;
 using Billder.Application.Interfaces;
 using Billder.Application.Repository.Interfaces;
 using Billder.Infrastructure.DTOs;
@@ -33,8 +34,8 @@ namespace Billder.Application.Services;
         {
             return await _trabajoRepository.DeleteTrabajoRepository(id, userId);
         }
-        public async Task<List<TrabajoDTO>> GetHistorialDeTrabajos(int clienteID, int numeroPagina, string ordenamiento)
+        public async Task<Paginacion<TrabajoDTO>> GetHistorialDeTrabajos(int clienteID, int userId, int numeroPagina, string ordenamiento)
         {
-            return await _trabajoRepository.GetHistorialDeTrabajosRepository(clienteID,numeroPagina,ordenamiento);
+            return await _trabajoRepository.GetHistorialDeTrabajosRepository(clienteID, userId, numeroPagina,ordenamiento);
         }
     }

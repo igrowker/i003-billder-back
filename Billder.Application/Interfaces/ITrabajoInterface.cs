@@ -1,4 +1,5 @@
-﻿using Billder.Infrastructure.DTOs;
+﻿using Billder.Application.Custom;
+using Billder.Infrastructure.DTOs;
 using Billder.Infrastructure.Entities;
 
 namespace Billder.Application.Interfaces
@@ -9,6 +10,6 @@ namespace Billder.Application.Interfaces
         Task<Trabajo> CrearTrabajo(Trabajo trabajo);
         Task<Trabajo> UpdateTrabajo(Trabajo trabajo, int userId);
         Task<int> DeleteTrabajo(int id, int userId);
-        Task<List<TrabajoDTO>> GetHistorialDeTrabajos(int usuarioID, int numeroPagina, string ordenamiento);
+        Task<Paginacion<TrabajoDTO>> GetHistorialDeTrabajos(int usuarioID, int userId, int numeroPagina, string ordenamiento);
     }
 }

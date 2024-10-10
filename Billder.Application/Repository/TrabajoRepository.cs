@@ -1,7 +1,9 @@
-﻿using Billder.Application.Repository.Interfaces;
+﻿using Billder.Application.Custom;
+using Billder.Application.Repository.Interfaces;
 using Billder.Infrastructure.Data;
 using Billder.Infrastructure.DTOs;
 using Billder.Infrastructure.Entities;
+using Microsoft.Data.SqlClient;
 using Microsoft.EntityFrameworkCore;
 
 
@@ -49,20 +51,20 @@ namespace Billder.Application.Repository
             return await _context.SaveChangesAsync();
         }
 
-        //agregar otros ordenamientos de ser necesario
-        public async Task<List<TrabajoDTO>> GetHistorialDeTrabajosRepository(int usuarioID, int numeroPagina, string ordenamiento)
+        public async Task<Paginacion<TrabajoDTO>> GetHistorialDeTrabajosRepository(int usuarioId, int userId, int numeroPagina, string ordenamiento)
         {
-            var usuarioValido = await _context.UsuarioRegistrados.FindAsync(usuarioID);
-            if (usuarioValido == null)
-            {
-                throw new Exception("Usuario no encontrado");
-            }
+            var usuarioValido = await _context.UsuarioRegistrados.FirstOrDefaultAsync(u => u.Id == userId && u.Id == usuarioId);
 
-            int trabajosPorPagina = 5;
+            int trabajosPorPagina = 10;
             int offset = (numeroPagina - 1) * trabajosPorPagina;
 
+            string countQuery = "SELECT COUNT(*) FROM dbo.Trabajo WHERE UsuarioId = @userId";
+            int cantidadDeTrabajos = await _context.Trabajos
+                .Where(t => t.UsuarioId == userId)
+                .CountAsync();
+
             string query =
-                "SELECT t.Id, t.Nombre, t.ClienteId, t.UsuarioId, t.Descripcion, " +
+                "SELECT t.Id, t.Nombre, t.ClienteId, t.UsuarioId, t.PresupuestoId, t.Descripcion, " +
                 "t.Fecha, t.EstadoTrabajo " +
                 "FROM dbo.Trabajo AS t " +
                 "WHERE t.UsuarioId = {0} " +
@@ -70,7 +72,7 @@ namespace Billder.Application.Repository
                 "OFFSET {1} ROWS FETCH NEXT {2} ROWS ONLY";
 
             var trabajosDeUsuario = await _context.Trabajos
-                .FromSqlRaw(query, usuarioID, offset, trabajosPorPagina)
+                .FromSqlRaw(query, userId, offset, trabajosPorPagina)
                 .Select(t => new TrabajoDTO
                 {
                     Id = t.Id,
@@ -83,7 +85,14 @@ namespace Billder.Application.Repository
                     EstadoTrabajo = t.EstadoTrabajo,
                 }).ToListAsync();
 
-            return trabajosDeUsuario;
+            return new Paginacion<TrabajoDTO>
+            {
+                Trabajos = trabajosDeUsuario,
+                CantidadTotal = cantidadDeTrabajos,
+                PaginaActual = numeroPagina,
+                PageSize = trabajosPorPagina,
+                TotalDePaginas = (int)Math.Ceiling(cantidadDeTrabajos / (double)trabajosPorPagina)
+            };
         }
     }
 }
