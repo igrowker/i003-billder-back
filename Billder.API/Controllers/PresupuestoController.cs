@@ -1,4 +1,5 @@
 ﻿using Billder.Application.Interfaces;
+using Billder.Application.Services;
 using Billder.Infrastructure.DTOs;
 using Billder.Infrastructure.Entities;
 using Microsoft.AspNetCore.Authorization;
@@ -33,113 +34,86 @@ namespace Billder.API.Controllers
         public async Task<ActionResult<IEnumerable<Presupuesto>>> GetPresupuestos()
         {
             var userId = ObtenerUsuarioId();
-            try
-            {
-                var presupuestos = await _presupuestoService.GetAllPresupuestosAsync(userId);
-                return Ok(presupuestos);
-            }
-            catch (Exception ex)
-            {
-                return BadRequest(ex.Message);
-            }
-
+            var presupuestos = await _presupuestoService.GetAllPresupuestosAsync(userId);
+            return Ok(presupuestos);
         }
 
         [HttpGet("{id}")]
         public async Task<ActionResult<Presupuesto>> GetById(int id)
         {
             var userId = ObtenerUsuarioId();
-            try
-            {
-                var presupuesto = await _presupuestoService.GetPresupuestoByIdAsync(id, userId);
+            var presupuesto = await _presupuestoService.GetPresupuestoByIdAsync(id, userId);
 
-                if (presupuesto == null)
-                {
-                    return NotFound();
-                }
-
-                return Ok(presupuesto);
-            }
-            catch (Exception ex)
+            if (presupuesto == null)
             {
-                return BadRequest(ex.Message);
+                return NotFound();
             }
 
+            return Ok(presupuesto);
         }
 
         [HttpPost]
         public async Task<ActionResult<Presupuesto>> Create([FromBody] PresupuestoDTO presupuestoDto)
         {
-            if (presupuestoDto == null)
-            {
-                return BadRequest();
-            }
-            var createdPresupuesto = new Presupuesto
-            {
-                EstadoPresupuesto = presupuestoDto.EstadoPresupuesto,
-                UsuarioId = ObtenerUsuarioId(),
-            };
-            try
-            {
-                await _presupuestoService.CreatePresupuestoAsync(createdPresupuesto);
-                return CreatedAtAction(nameof(GetById), new { id = createdPresupuesto.Id }, createdPresupuesto);
-            }
-            catch (Exception ex)
-            {
-                return StatusCode(500, new { message = "Ocurrió un error inesperado.", detail = ex.Message });
-            }
 
+            if(presupuestoDto == null)
+            {
+                return BadRequest("Presupuest no debe estar vacío");
+            }
+            var objetoPresupuesto = new Presupuesto
+            {
+                UsuarioId = ObtenerUsuarioId(),
+                ClienteId = presupuestoDto.ClienteId,
+                FechaVencimiento = (DateTime)presupuestoDto.FechaVencimiento,
+                EstadoPresupuesto = presupuestoDto.EstadoPresupuesto,
+            };
+            var createdPresupuesto = await _presupuestoService.CreatePresupuestoAsync(objetoPresupuesto);
+            return CreatedAtAction(nameof(GetById), new { id = createdPresupuesto.Id }, createdPresupuesto);
         }
 
         [HttpPut("{id}")]
         public async Task<IActionResult> Update(int id, [FromBody] PresupuestoDTO presupuestoDto)
         {
-            if (id != presupuestoDto.Id)
-            {
-                return BadRequest();
-            }
             var userId = ObtenerUsuarioId();
-            var presupuesto = new Presupuesto
+            if (presupuestoDto == null)
             {
-                Id = presupuestoDto.Id,
-                EstadoPresupuesto = presupuestoDto.EstadoPresupuesto
-            };
-            try
-            {
-                var updated = await _presupuestoService.UpdatePresupuestoAsync(presupuesto, userId);
+                return BadRequest("El Presupuesto no puede ser nulo");
+            }
 
-                if (!updated)
-                {
-                    return NotFound();
-                }
-                return NoContent();
-            }
-            catch (Exception ex)
+            var presupuestoExistente = await _presupuestoService.GetPresupuestoByIdAsync(id, userId);
+            if (presupuestoExistente == null)
             {
-                return BadRequest(ex.Message);
+                return NotFound($"Presupuesto con ID {presupuestoDto.Id} no encontrado");
             }
+            var objetoPresupuesto = new Presupuesto
+            {
+                Id = id,
+                ClienteId = presupuestoDto.ClienteId,
+                FechaVencimiento = (DateTime)presupuestoDto.FechaVencimiento,
+                EstadoPresupuesto = presupuestoDto.EstadoPresupuesto,
+            };
+            var presupuestoActualizar = await _presupuestoService.UpdatePresupuestoAsync(objetoPresupuesto, userId);
+            return Ok(objetoPresupuesto);
+
         }
 
         [HttpDelete("{id}")]
         public async Task<IActionResult> Delete(int id)
         {
             var userId = ObtenerUsuarioId();
-            try
+            var presupuestoExistente = await _presupuestoService.GetPresupuestoByIdAsync(id, userId);
+            if (presupuestoExistente == null)
             {
-                var deleted = await _presupuestoService.DeletePresupuestoByIdAsync(id, userId);
-
-                if (!deleted)
-                {
-                    return NotFound();
-                }
-
-                return NoContent();
+                return NotFound($"Presupuesto con ID {id} no encontrado");
             }
-            catch (Exception ex)
+            var deleted = await _presupuestoService.DeletePresupuestoByIdAsync(id, userId);
+
+            if (!deleted)
             {
-                return BadRequest(ex.Message);
+                return NotFound();
             }
 
+            return NoContent();
         }
     }
 }

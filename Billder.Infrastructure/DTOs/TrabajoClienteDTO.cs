@@ -6,8 +6,10 @@ using System.Threading.Tasks;
 
 namespace Billder.Infrastructure.DTOs
 {
-    public record class ChangePasswordDTO(
-    string oldPassword,
-    string newPassword
-    );
+    public class TrabajoClienteDTO
+    {
+        public TrabajoDTO Trabajo { get; set; } = null!;
+        public ClienteDTO Cliente { get; set; } = null!;
+
+    }
 }

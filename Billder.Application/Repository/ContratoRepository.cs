@@ -1,14 +1,7 @@
 ﻿using Billder.Application.Repository.Interfaces;
 using Billder.Infrastructure.Data;
-using Billder.Infrastructure.DTOs;
 using Billder.Infrastructure.Entities;
 using Microsoft.EntityFrameworkCore;
-using System;
-using System.Collections.Generic;
-using System.Diagnostics.Contracts;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Billder.Application.Repository
 {
@@ -34,37 +27,43 @@ namespace Billder.Application.Repository
             }
 
         }
-        public async Task<Contrato> GetContratoByIDRepository(int id)
+        public async Task<Contrato> GetContratoByIDRepository(int id, int userId)
         {
             try
             {
-                return await _context.Contratos.FindAsync(id);
+                return await _context.Contratos.FirstOrDefaultAsync(c => c.UsuarioId == userId && c.Id == id);
             }
             catch (Exception ex)
             {
                 throw new Exception("Ocurrio un error al obtener el contrato por ID ", ex);
             }
         }
-        public async Task<Contrato> UpdateContratoRepository(Contrato contratoRecibido)
+        public async Task<Contrato> UpdateContratoRepository(Contrato contratoRecibido, int userId)
         {
             try
             {
-                var objetoContrato = await _context.Contratos.FindAsync(contratoRecibido.Id);
+                var objetoContrato = await _context.Contratos.FirstOrDefaultAsync(c => c.UsuarioId == userId && c.Id == contratoRecibido.Id);
 
-                contratoRecibido.Condiciones = contratoRecibido.Condiciones;
+                objetoContrato.Condiciones = contratoRecibido.Condiciones;
+                objetoContrato.TrabajoId = contratoRecibido.TrabajoId;
+                objetoContrato.PresupuestoId = contratoRecibido.PresupuestoId;
+                objetoContrato.FechaFirma = contratoRecibido.FechaFirma;
+                objetoContrato.Estado = contratoRecibido.Estado;
+                objetoContrato.FirmaDigital = contratoRecibido.FirmaDigital;
 
                 await _context.SaveChangesAsync();
-                return contratoRecibido;
+
+                return objetoContrato;
             }
             catch (DbUpdateException ex)
             {
                 throw new Exception("Ocurrio un error al actualizar el contrato", ex);
             }
-
         }
-        public async Task<int> DeleteContratoRepository(int id)
+
+        public async Task<int> DeleteContratoRepository(int id, int userId)
         {
-            var contratoEncontrado = await _context.Contratos.FindAsync(id);
+            var contratoEncontrado = await _context.Contratos.FirstOrDefaultAsync(c => c.UsuarioId == userId && c.Id == id);
 
             _context.Contratos.Remove(contratoEncontrado);
             return await _context.SaveChangesAsync();
@@ -82,9 +81,8 @@ namespace Billder.Application.Repository
                     .FromSqlRaw(
                         "SELECT * " +
                         "FROM dbo.Contrato AS co " +
-                        "INNER JOIN dbo.UsuarioRegistrado AS u ON co.UsuarioId = u.Id " +
                         "WHERE co.UsuarioId = {0} " +
-                        "ORDER BY co.Fecha DESC " +
+                        "ORDER BY co.FechaCreacion DESC " +
                         "OFFSET {1} ROWS FETCH NEXT {2} ROWS ONLY",
                         usuarioID, offset, contratosPorPagina)
                     .ToListAsync();

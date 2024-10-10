@@ -28,23 +28,14 @@ namespace Billder.Application.Repository
 
         public async Task<bool> DeletePresupuestoById(int id, int userId)
         {
-            var presupuesto = await _context.Presupuestos.Include(p => p.PresupuestoEmpleados)
-                                                         .Include(p => p.PresupuestoMaterials)
-                                                         .FirstOrDefaultAsync(p => p.Id == id && p.UsuarioId == userId);    
+            var presupuesto = await _context.Presupuestos.Include(p => p.Gastos)
+                                                         .FirstOrDefaultAsync(p => p.UsuarioId == userId && p.Id == id);
 
             if (presupuesto == null)
             {
                 return false;
             }
-
-            if (presupuesto.PresupuestoEmpleados != null && presupuesto.PresupuestoEmpleados.Any())
-            {
-                _context.PresupuestoEmpleados.RemoveRange(presupuesto.PresupuestoEmpleados);
-            }
-            if (presupuesto.PresupuestoMaterials != null && presupuesto.PresupuestoMaterials.Any())
-            {
-                _context.PresupuestoMaterials.RemoveRange(presupuesto.PresupuestoMaterials);
-            }
+            _context.Gastos.RemoveRange(presupuesto.Gastos);
             _context.Presupuestos.Remove(presupuesto);
             await _context.SaveChangesAsync();
             return true;
@@ -57,7 +48,7 @@ namespace Billder.Application.Repository
 
         public async Task<Presupuesto> GetPresupuestoById(int id, int userId)
         {
-            var result = await _context.Presupuestos.FirstOrDefaultAsync(p => p.UsuarioId == userId && p.Id == id); 
+            var result = await _context.Presupuestos.FirstOrDefaultAsync(p => p.UsuarioId == userId && p.Id == id);
             return result ?? null!;
             
         }
@@ -70,10 +61,10 @@ namespace Billder.Application.Repository
             {
                 return false;
             }
-
+            existingPresupuesto.ClienteId = presupuesto.ClienteId;
+            existingPresupuesto.FechaVencimiento = presupuesto.FechaVencimiento;
             existingPresupuesto.EstadoPresupuesto = presupuesto.EstadoPresupuesto;
 
-            _context.Presupuestos.Update(existingPresupuesto);
             await _context.SaveChangesAsync();
             return true;
         }

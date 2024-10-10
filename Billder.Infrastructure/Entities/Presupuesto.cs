@@ -7,18 +7,19 @@ namespace Billder.Infrastructure.Entities
     {
         public Presupuesto()
         {
-            PresupuestoEmpleados = new HashSet<PresupuestoEmpleado>();
-            PresupuestoMaterials = new HashSet<PresupuestoMaterial>();
+            Gastos = new HashSet<Gasto>();
             Trabajos = new HashSet<Trabajo>();
         }
 
         public int Id { get; set; }
         public int UsuarioId { get; set; }
+        public int ClienteId { get; set; }
+        public DateTime FechaVencimiento { get; set; }
         public string EstadoPresupuesto { get; set; } = null!;
 
+        public virtual Cliente Cliente { get; set; } = null!;
         public virtual UsuarioRegistrado Usuario { get; set; } = null!;
-        public virtual ICollection<PresupuestoEmpleado> PresupuestoEmpleados { get; set; }
-        public virtual ICollection<PresupuestoMaterial> PresupuestoMaterials { get; set; }
+        public virtual ICollection<Gasto> Gastos { get; set; }
         public virtual ICollection<Trabajo> Trabajos { get; set; }
     }
 }

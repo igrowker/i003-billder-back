@@ -49,7 +49,7 @@ namespace Billder.Application.Services
             }
             try
             {
-                if(!VerifyPassword(usuario.Password, request.oldPassword))
+                if (!VerifyPassword(usuario.Password, request.oldPassword))
                 {
                     throw new ArgumentException("La password actual no es correcta");
                 }
