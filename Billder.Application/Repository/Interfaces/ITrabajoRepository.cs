@@ -5,6 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Billder.Infrastructure.DTOs;
+using Billder.Application.Custom;
 namespace Billder.Application.Repository.Interfaces
 {
     public interface ITrabajoRepository
@@ -13,6 +14,6 @@ namespace Billder.Application.Repository.Interfaces
         Task<Trabajo> UpdateTrabajoRepository(Trabajo trabajo, int userId);
         Task<Trabajo> GetTrabajoByIDRepository(int id, int userId);
         Task<int> DeleteTrabajoRepository(int id, int userId);
-        Task<List<TrabajoDTO>> GetHistorialDeTrabajosRepository(int usuarioID, int userId, int numeroPagina, string ordenamiento);
+        Task<Paginacion<TrabajoDTO>> GetHistorialDeTrabajosRepository(int usuarioID, int userId, int numeroPagina, string ordenamiento);
     }
 }

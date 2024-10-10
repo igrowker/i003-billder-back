@@ -200,12 +200,17 @@ namespace Billder.API.Controllers
         {
             var userId = ObtenerUsuarioId();
 
-            if(ordenamiento != "ASC" && ordenamiento != "DESC") //solo acepta uno a la vez, y debe coincidir con esos valores
+            if (numeroPagina < 1)
             {
-                return BadRequest("El ordenamiento es invalido");
+                return BadRequest("El número de página debe ser mayor que 0");
+            }
+            if (!string.Equals(ordenamiento, "ASC", StringComparison.OrdinalIgnoreCase) &&
+                !string.Equals(ordenamiento, "DESC", StringComparison.OrdinalIgnoreCase)) //solo acepta uno a la vez, y debe coincidir con esos valores
+            {
+                return BadRequest("El ordenamiento debe ser 'ASC' o 'DESC'");
             }
 
-            var trabajos = await _service.GetHistorialDeTrabajos(usuarioId, userId, numeroPagina, ordenamiento);
+            var trabajos = await _service.GetHistorialDeTrabajos(usuarioId, userId, numeroPagina, ordenamiento.ToUpper());
             return Ok(trabajos);
         }
     }
